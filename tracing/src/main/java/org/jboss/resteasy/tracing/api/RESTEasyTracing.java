@@ -39,4 +39,42 @@ public abstract class RESTEasyTracing {
      */
     protected static final String DEFAULT_LOGGER_NAME_SUFFIX = "general";
 
+    /**
+     * Test if a tracing support is enabled if {@code event} can be logged (according to event.level and threshold level set).
+     *
+     * @param event event type to be tested
+     * @return {@code true} if {@code event} can be logged
+     */
+    public abstract boolean isLogEnabled(RESTEasyTracingEvent event);
+
+    /**
+     * Try to log event according to event level and request context threshold level setting.
+     *
+     * @param event event type to be logged
+     * @param args  message arguments (in relation to {@link RESTEasyTracingEvent#messageFormat()}
+     */
+    public abstract void log(RESTEasyTracingEvent event, Object... args);
+
+    /**
+     * Try to log event according to event level and request context threshold level setting.
+     * <p>
+     * If logging support is switched on for current request and event setting the method computes duration of event and log
+     * message. If {@code fromTimestamp} is not set (i.e. {@code -1}) then duration of event
+     * is {@code 0}.
+     *
+     * @param event         event type to be logged
+     * @param fromTimestamp logged event is running from the timestamp in nanos. {@code -1} in case event has no duration
+     * @param args          message arguments (in relation to {@link RESTEasyTracingEvent#messageFormat()#messageFormat()}
+     */
+    public abstract void logDuration(RESTEasyTracingEvent event, long fromTimestamp, Object... args);
+
+    /**
+     * If logging support is switched on for current request and event setting the method returns current timestamp in nanos.
+     *
+     * @param event event type to be logged
+     * @return Current timestamp in nanos or {@code -1} if tracing is not enabled
+     */
+    public abstract long timestamp(RESTEasyTracingEvent event);
+
+
 }
