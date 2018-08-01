@@ -18,6 +18,12 @@ public abstract class RESTEasyTracing {
      * Make sense in case of tracing support enabled by ON_DEMAND value.
      */
     public static final String HEADER_ACCEPT = HEADER_TRACING_PREFIX + "Accept";
+
+    /**
+     * Request header name to indicate the tracing info format.
+     * Currently we support `TEXT` format and `JSON` format.
+     */
+    public static final String HEADER_ACCEPT_FORMAT = HEADER_TRACING_PREFIX + "Accept-Format";
     /**
      * Request header name to set JDK logger name suffix to identify a request logs.
      */

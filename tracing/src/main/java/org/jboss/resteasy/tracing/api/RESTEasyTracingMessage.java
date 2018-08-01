@@ -53,4 +53,9 @@ public class RESTEasyTracingMessage {
     public String toString() {
         return text;
     }
+
+
+    public String getText() {
+        return text;
+    }
 }
