@@ -1,69 +1,43 @@
 package org.jboss.resteasy.tracing.api;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.jboss.resteasy.tracing.api.providers.TextBasedRESTEasyTracingInfo;
 
-public class RESTEasyTracingInfo {
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
-    public enum FORMAT {
-        TEXT,
-        JSON
+public abstract class RESTEasyTracingInfo {
+
+    protected static final ServiceLoader<RESTEasyTracingInfo> INSTANCES;
+    protected static final RESTEasyTracingInfo DEFAULT = new TextBasedRESTEasyTracingInfo();
+
+    static {
+        INSTANCES = ServiceLoader.load(RESTEasyTracingInfo.class, Thread.currentThread().getContextClassLoader());
     }
 
-    protected final List<RESTEasyTracingMessage> messageList = new ArrayList<RESTEasyTracingMessage>();
-
-    public void addMessage(RESTEasyTracingMessage message) {
-        messageList.add(message);
-    }
-
-    public static String formatDuration(final long duration) {
-        if (duration == 0) {
-            return " ----";
+    public static RESTEasyTracingInfo get(String format) {
+        if (format == null || format.isEmpty()) {
+            return DEFAULT;
         } else {
-            return String.format("%5.2f", (duration / 1000000.0));
+            if (format.equals(RESTEasyTracingInfoFormat.TEXT.toString())) {
+                return new TextBasedRESTEasyTracingInfo();
+            } else if (format.equals(RESTEasyTracingInfoFormat.JSON.toString())) {
+                Iterator<RESTEasyTracingInfo> iter = INSTANCES.iterator();
+                while (iter.hasNext()) {
+                    RESTEasyTracingInfo instance = iter.next();
+                    if (instance.supports(RESTEasyTracingInfoFormat.JSON)) {
+                        return instance;
+                    }
+                }
+            }
         }
+        return DEFAULT;
     }
 
-    public static String formatDuration(final long fromTimestamp, final long toTimestamp) {
-        return formatDuration(toTimestamp - fromTimestamp);
-    }
+    public abstract boolean supports(RESTEasyTracingInfoFormat format);
 
-    public static String formatPercent(final long value, final long top) {
-        if (value == 0) {
-            return "  ----";
-        } else {
-            return String.format("%6.2f", 100.0 * value / top);
-        }
-    }
+    public abstract String[] getMessages();
 
-    public String[] getMessages() {
-        // Format: EventCategory [duration / sinceRequestTime | duration/requestTime % ]
-        // e.g.:   RI [ 3.88 / 8.93 ms | 1.37 %] message text
+    public abstract void addMessage(RESTEasyTracingMessage message);
 
-        final long fromTimestamp = messageList.get(0).getTimestamp() - messageList.get(0).getDuration();
-        final long toTimestamp = messageList.get(messageList.size() - 1).getTimestamp();
-
-        final String[] messages = new String[messageList.size()];
-
-        for (int i = 0; i < messages.length; i++) {
-            final RESTEasyTracingMessage message = messageList.get(i);
-            final StringBuilder text = new StringBuilder();
-            // event
-            text.append(String.format("%-11s ", message.getEvent().category()));
-            // duration
-            text.append('[')
-                    .append(formatDuration(message.getDuration()))
-                    .append(" / ")
-                    .append(formatDuration(fromTimestamp, message.getTimestamp()))
-                    .append(" ms |")
-                    .append(formatPercent(message.getDuration(), toTimestamp - fromTimestamp))
-                    .append(" %] ");
-            // text
-            text.append(message.toString());
-            messages[i] = text.toString();
-        }
-        return messages;
-    }
-
-
+    public abstract String formatDuration(final long duration);
 }
