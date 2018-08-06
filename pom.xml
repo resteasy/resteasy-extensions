@@ -14,7 +14,7 @@
 
     <groupId>org.jboss.resteasy</groupId>
     <artifactId>resteasy-extensions</artifactId>
-    <version>1.0.0.Beta1</version>
+    <version>1.0.0.Beta2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
