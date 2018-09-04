@@ -196,8 +196,6 @@
                 <artifactId>log4j-core</artifactId>
                 <version>${version.log4j}</version>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 

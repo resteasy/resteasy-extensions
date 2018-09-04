@@ -38,6 +38,7 @@
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging-processor</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>
