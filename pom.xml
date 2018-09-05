@@ -78,6 +78,7 @@
 
     <modules>
         <module>tracing</module>
+        <module>eagledns</module>
     </modules>
 
     <profiles>
