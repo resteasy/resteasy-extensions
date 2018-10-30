@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
         <version>26</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -14,16 +13,16 @@
 
     <groupId>org.jboss.resteasy</groupId>
     <artifactId>resteasy-extensions</artifactId>
-    <version>1.0.0.Beta2-SNAPSHOT</version>
+    <version>1.0.0.Beta2</version>
     <packaging>pom</packaging>
 
     <properties>
-        <jboss.home/>
+        <jboss.home />
         <!-- print logs to file by default -->
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
         <!-- Modularized JDK support (various workarounds) - activated via profile -->
-        <modular.jdk.args/>
-        <modular.jdk.props/>
+        <modular.jdk.args />
+        <modular.jdk.props />
         <!-- maven-enforcer-plugin -->
         <maven.min.version>3.2.5</maven.min.version>
         <jdk.min.version>${maven.compiler.source}</jdk.min.version>
@@ -58,7 +57,8 @@
         <connection>scm:git:git://github.com/resteasy/resteasy-extensions.git</connection>
         <developerConnection>scm:git:git@github.com:resteasy/resteasy-extensions.git</developerConnection>
         <url>http://github.com/resteasy/resteasy-extensions/tree/master/</url>
-    </scm>
+      <tag>resteasy-extensions-1.0.0.Beta2</tag>
+  </scm>
 
     <distributionManagement>
         <repository>
@@ -74,7 +74,7 @@
     </issueManagement>
 
     <developers>
-        <developer/>
+        <developer />
     </developers>
 
     <modules>
@@ -102,7 +102,7 @@
                             <failsOnError>true</failsOnError>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <excludes>**/*$logger.java,**/*$bundle.java</excludes>
-                            <useFile/>
+                            <useFile />
                         </configuration>
                         <executions>
                             <execution>
@@ -120,7 +120,7 @@
     </profiles>
 
     <contributors>
-        <contributor/>
+        <contributor />
     </contributors>
 
     <repositories>
