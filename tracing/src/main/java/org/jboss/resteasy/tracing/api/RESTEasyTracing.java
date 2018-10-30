@@ -70,7 +70,7 @@ public abstract class RESTEasyTracing {
      *
      * @param event         event type to be logged
      * @param fromTimestamp logged event is running from the timestamp in nanos. {@code -1} in case event has no duration
-     * @param args          message arguments (in relation to {@link RESTEasyTracingEvent#messageFormat()#messageFormat()}
+     * @param args          message arguments (in relation to {@link RESTEasyTracingEvent#messageFormat()}
      */
     public abstract void logDuration(RESTEasyTracingEvent event, long fromTimestamp, Object... args);
 
