@@ -21,11 +21,17 @@ public class RESTEasyTracingMessage {
      */
     private final String text;
 
-    public RESTEasyTracingMessage(RESTEasyTracingEvent event, long duration, final String[] args) {
+    /**
+     * request instance id this message belongs to.
+     */
+    private final String requestId;
+
+    public RESTEasyTracingMessage(RESTEasyTracingEvent event, final String requestId, final long duration, final String[] args) {
+        this.requestId = requestId;
         this.event = event;
         this.duration = duration;
-
         this.timestamp = System.nanoTime();
+
         if (event.messageFormat() != null) {
             this.text = String.format(event.messageFormat(), (Object[]) args);
         } else {
@@ -54,6 +60,10 @@ public class RESTEasyTracingMessage {
         return text;
     }
 
+
+    public String getRequestId() {
+        return requestId;
+    }
 
     public String getText() {
         return text;
