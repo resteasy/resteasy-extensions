@@ -55,6 +55,8 @@ public class TextBasedRESTEasyTracingInfo extends RESTEasyTracingInfo {
         for (int i = 0; i < messages.length; i++) {
             final RESTEasyTracingMessage message = messageList.get(i);
             final StringBuilder text = new StringBuilder();
+            // requestId
+            text.append(message.getRequestId() + ' ');
             // event
             text.append(String.format("%-11s ", message.getEvent().category()));
             // duration
