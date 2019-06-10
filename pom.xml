@@ -38,17 +38,17 @@
         <version.log4j>2.9.1</version.log4j>
     </properties>
 
-    <url>http://rest-easy.org</url>
+    <url>https://resteasy.github.io/</url>
 
     <licenses>
         <license>
             <name>CDDL 1.1</name>
-            <url>http://repository.jboss.org/licenses/cddl-v1.1.txt</url>
+            <url>https://repository.jboss.org/licenses/cddl-v1.1.txt</url>
             <distribution>repo</distribution>
         </license>
         <license>
             <name>GPL2 w/ CPE</name>
-            <url>http://repository.jboss.org/licenses/gpl-2.0-ce.txt</url>
+            <url>https://repository.jboss.org/licenses/gpl-2.0-ce.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -56,7 +56,7 @@
     <scm>
         <connection>scm:git:git://github.com/resteasy/resteasy-extensions.git</connection>
         <developerConnection>scm:git:git@github.com:resteasy/resteasy-extensions.git</developerConnection>
-        <url>http://github.com/resteasy/resteasy-extensions/tree/master/</url>
+        <url>https://github.com/resteasy/resteasy-extensions/tree/master/</url>
       <tag>HEAD</tag>
   </scm>
 
@@ -70,7 +70,7 @@
 
     <issueManagement>
         <system>JIRA</system>
-        <url>http://jira.jboss.com/jira/browse/RESTEASY</url>
+        <url>https://jira.jboss.com/jira/browse/RESTEASY</url>
     </issueManagement>
 
     <developers>
@@ -126,7 +126,7 @@
     <repositories>
         <repository>
             <id>jboss</id>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
         </repository>
     </repositories>
     <pluginRepositories>
