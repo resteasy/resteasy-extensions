@@ -1,12 +1,12 @@
 package se.unlogic.eagledns;
 
-import org.apache.log4j.Logger;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+
+import org.jboss.logging.Logger;
 
 
 public class UDPSocketMonitor extends Thread {

@@ -1,35 +1,5 @@
 package se.unlogic.eagledns;
 
-import org.apache.log4j.Logger;
-import org.xbill.DNS.Address;
-import org.xbill.DNS.CNAMERecord;
-import org.xbill.DNS.DClass;
-import org.xbill.DNS.DNAMERecord;
-import org.xbill.DNS.ExtendedFlags;
-import org.xbill.DNS.Flags;
-import org.xbill.DNS.Header;
-import org.xbill.DNS.Message;
-import org.xbill.DNS.NSRecord;
-import org.xbill.DNS.Name;
-import org.xbill.DNS.NameTooLongException;
-import org.xbill.DNS.OPTRecord;
-import org.xbill.DNS.Opcode;
-import org.xbill.DNS.RRset;
-import org.xbill.DNS.Rcode;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.Section;
-import org.xbill.DNS.SetResponse;
-import org.xbill.DNS.TSIG;
-import org.xbill.DNS.TSIGRecord;
-import org.xbill.DNS.Type;
-import org.xbill.DNS.Zone;
-import se.unlogic.standardutils.reflection.ReflectionUtils;
-import se.unlogic.standardutils.settings.SettingNode;
-import se.unlogic.standardutils.settings.XMLSettingNode;
-import se.unlogic.standardutils.string.StringUtils;
-import se.unlogic.standardutils.time.MillisecondTimeUnits;
-import se.unlogic.standardutils.timer.RunnableTimerTask;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -59,6 +29,37 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import org.jboss.logging.Logger;
+import org.xbill.DNS.Address;
+import org.xbill.DNS.CNAMERecord;
+import org.xbill.DNS.DClass;
+import org.xbill.DNS.DNAMERecord;
+import org.xbill.DNS.ExtendedFlags;
+import org.xbill.DNS.Flags;
+import org.xbill.DNS.Header;
+import org.xbill.DNS.Message;
+import org.xbill.DNS.NSRecord;
+import org.xbill.DNS.Name;
+import org.xbill.DNS.NameTooLongException;
+import org.xbill.DNS.OPTRecord;
+import org.xbill.DNS.Opcode;
+import org.xbill.DNS.RRset;
+import org.xbill.DNS.Rcode;
+import org.xbill.DNS.Record;
+import org.xbill.DNS.Section;
+import org.xbill.DNS.SetResponse;
+import org.xbill.DNS.TSIG;
+import org.xbill.DNS.TSIGRecord;
+import org.xbill.DNS.Type;
+import org.xbill.DNS.Zone;
+
+import se.unlogic.standardutils.reflection.ReflectionUtils;
+import se.unlogic.standardutils.settings.SettingNode;
+import se.unlogic.standardutils.settings.XMLSettingNode;
+import se.unlogic.standardutils.string.StringUtils;
+import se.unlogic.standardutils.time.MillisecondTimeUnits;
+import se.unlogic.standardutils.timer.RunnableTimerTask;
 
 /**
  * EagleDNS copyright Robert "Unlogic" Olofsson (unlogic@unlogic.se)

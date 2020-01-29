@@ -1,7 +1,6 @@
 package se.unlogic.standardutils.callback;
 
-
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 public class SysoutCallback<T> implements Callback<T> {
 
