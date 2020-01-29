@@ -1,12 +1,13 @@
 package se.unlogic.eagledns;
 
-import org.apache.log4j.Logger;
-import se.unlogic.standardutils.settings.XMLSettingNode;
-
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+
+import org.jboss.logging.Logger;
+
+import se.unlogic.standardutils.settings.XMLSettingNode;
 
 
 public class EagleManagerClient {

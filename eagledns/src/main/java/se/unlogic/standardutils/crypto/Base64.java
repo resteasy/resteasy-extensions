@@ -1,6 +1,6 @@
 package se.unlogic.standardutils.crypto;
 
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 
 /**
  * <p>

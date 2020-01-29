@@ -1,7 +1,17 @@
 package se.unlogic.eagledns.zoneproviders.db;
 
-import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.jboss.logging.Logger;
 import org.xbill.DNS.Zone;
+
 import se.unlogic.eagledns.SecondaryZone;
 import se.unlogic.eagledns.ZoneProvider;
 import se.unlogic.eagledns.zoneproviders.db.beans.DBRecord;
@@ -14,14 +24,6 @@ import se.unlogic.standardutils.dao.SimpleAnnotatedDAOFactory;
 import se.unlogic.standardutils.dao.SimpleDataSource;
 import se.unlogic.standardutils.dao.TransactionHandler;
 import se.unlogic.standardutils.reflection.ReflectionUtils;
-
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class DBZoneProvider implements ZoneProvider {
 
