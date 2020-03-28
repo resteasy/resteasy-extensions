@@ -79,6 +79,7 @@
     <modules>
         <module>tracing</module>
         <module>eagledns</module>
+        <module>resteasy-links-extension</module>
     </modules>
 
     <profiles>
