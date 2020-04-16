@@ -3,3 +3,7 @@
 
 # RESTEasy Extensions
 
+This project provides some additional extensions to the RESTEasy.
+
+For example, it provides tracing feature to RESTEasy, and if you add this module into your dependency, then the tracing module will be loaded automatically at runtime.
+
