@@ -18,17 +18,17 @@ public class ZoneDissasembler {
 
 		Master master = new Master(zoneFile.getPath(),Name.fromString(zoneFile.getName(), Name.root));
 
-		Record record = master._nextRecord();
+		Record record = master.nextRecord();
 
 		Logger LOG = Logger.getLogger(ZoneDissasembler.class);
 
 		while(record != null){
 
 			LOG.info("Class: " + record.getClass());
-			LOG.info("Name: " + record.getName());
+			LOG.info("Name: " + record.getName().toString());
 			LOG.info("toString: " + record.toString());
 
-			record = master._nextRecord();
+			record = master.nextRecord();
 		}
 	}
 

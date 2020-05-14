@@ -659,9 +659,7 @@ public class EagleDNS implements Runnable, EagleManager {
 			}
 		}
 		if ((flags & FLAG_SIGONLY) == 0) {
-			Iterator<?> it = rrset.rrs();
-			while (it.hasNext()) {
-				Record r = (Record) it.next();
+			for (Record r : rrset.rrs()) {
 				if (r.getName().isWild() && !name.isWild()) {
 					r = r.withName(name);
 				}
@@ -669,9 +667,7 @@ public class EagleDNS implements Runnable, EagleManager {
 			}
 		}
 		if ((flags & (FLAG_SIGONLY | FLAG_DNSSECOK)) != 0) {
-			Iterator<?> it = rrset.sigs();
-			while (it.hasNext()) {
-				Record r = (Record) it.next();
+			for (Record r : rrset.sigs()) {
 				if (r.getName().isWild() && !name.isWild()) {
 					r = r.withName(name);
 				}
@@ -773,7 +769,7 @@ public class EagleDNS implements Runnable, EagleManager {
 				}
 				rcode = addAnswer(response, newname, type, dclass, iterations + 1, flags);
 			} else if (sr.isSuccessful()) {
-				RRset[] rrsets = sr.answers();
+				List<RRset> rrsets = sr.answers();
 				for (RRset rrset : rrsets) {
 					addRRset(name, response, rrset, Section.ANSWER, flags);
 				}
@@ -804,24 +800,15 @@ public class EagleDNS implements Runnable, EagleManager {
 		// Check that the IP requesting the AXFR is present as a NS in this zone
 		boolean axfrAllowed = false;
 
-		Iterator<?> nsIterator = zone.getNS().rrs();
-
-		while (nsIterator.hasNext()) {
-
-			NSRecord record = (NSRecord) nsIterator.next();
-
+		for (Record record : zone.getNS().rrs()) {
 			try {
-				String nsIP = InetAddress.getByName(record.getTarget().toString()).getHostAddress();
-
+				String nsIP = InetAddress.getByName(record.getName().toString()).getHostAddress();
 				if (s.getInetAddress().getHostAddress().equals(nsIP)) {
-
 					axfrAllowed = true;
 					break;
 				}
-
 			} catch (UnknownHostException e) {
-
-				log.warn("Unable to resolve hostname of nameserver " + record.getTarget() + " in zone " + zone.getOrigin() + " while processing AXFR request from " + s.getRemoteSocketAddress());
+				log.warn("Unable to resolve hostname of nameserver " + record.getName() + " in zone " + zone.getOrigin() + " while processing AXFR request from " + s.getRemoteSocketAddress());
 			}
 		}
 
