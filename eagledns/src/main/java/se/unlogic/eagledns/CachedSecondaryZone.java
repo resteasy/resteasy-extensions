@@ -54,7 +54,7 @@ public class CachedSecondaryZone {
 			xfrin.setDClass(DClass.value(this.secondaryZone.getDclass()));
 			xfrin.setTimeout(axfrTimeout);
 
-			List<?> records = xfrin.run();
+			List<Record> records = xfrin.getAXFR();
 
 			if (!xfrin.isAXFR()) {
 
@@ -86,12 +86,6 @@ public class CachedSecondaryZone {
 			}
 
 		} catch (IOException e) {
-
-			log.warn("Unable to transfer zone " + this.secondaryZone.getZoneName() + " from server " + this.secondaryZone.getRemoteServerAddress() + ", " + e);
-
-			checkExpired();
-
-		} catch (ZoneTransferException e) {
 
 			log.warn("Unable to transfer zone " + this.secondaryZone.getZoneName() + " from server " + this.secondaryZone.getRemoteServerAddress() + ", " + e);
 

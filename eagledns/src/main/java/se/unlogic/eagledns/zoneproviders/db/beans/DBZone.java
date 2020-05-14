@@ -137,12 +137,7 @@ public class DBZone implements Elementable{
 
 				RRset rRset = (RRset) iterator.next();
 
-				Iterator<?> rrSetIterator = rRset.rrs();
-
-				while(rrSetIterator.hasNext()){
-
-					Record record = (Record) rrSetIterator.next();
-
+				for (Record record : rRset.rrs()) {
 					if(record.getType() == Type.SOA){
 						continue;
 					}
