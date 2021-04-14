@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jboss.resteasy</groupId>
@@ -40,95 +40,5 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-    <profiles>
-        <profile>
-            <!-- exclude integrations tests which are known to fail -->
-            <id>exclude-known-tests-failures</id>
-            <activation>
-                <property>
-                    <name>exclude-known-tests-failures</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <excludes combine.children="append">
-                                <exclude>org/jboss/resteasy/test/providers/iioimage/TestIIOImageProvider.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>i18n</id>
-            <activation>
-                <property>
-                    <name>i18n</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-resources</id>
-                                <phase>initialize</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/src/main/resources/org/jboss/resteasy/resteasy_jaxrs/i18n</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${basedir}/src/test/resources/i18n</directory>
-                                            <includes>
-                                                <include>*</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                    <overwrite>true</overwrite>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                       <groupId>org.apache.maven.plugins</groupId>
-                       <artifactId>maven-surefire-plugin</artifactId>
-                       <executions>
-                           <execution>
-                               <id>i18</id>
-                               <phase>test</phase>
-                               <goals>
-                                   <goal>test</goal>
-                               </goals>
-                               <configuration>
-                                   <skip>false</skip>
-                                   <reuseForks>false</reuseForks>
-                                   <includes>
-                                       <include>**/I18nTestMessages_*.java</include>
-                                   </includes>
-                               </configuration>
-                           </execution>
-                       </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

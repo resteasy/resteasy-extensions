@@ -31,7 +31,6 @@
         <!-- Plugins versions -->
         <version.javax.ws.rs-api>1.0.2.Final</version.javax.ws.rs-api>
         <version.org.jacoco.plugin>0.7.9</version.org.jacoco.plugin>
-        <version.surefire.plugin>2.19.1</version.surefire.plugin>
         <version.org.jboss.logging.jboss-logging>3.3.1.Final</version.org.jboss.logging.jboss-logging>
         <version.org.jboss.logging.jboss-logging-annotations>2.1.0.Final</version.org.jboss.logging.jboss-logging-annotations>
         <version.org.slf4j>1.7.25</version.org.slf4j>
@@ -239,34 +238,5 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>i18n cleanup</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                        <configuration>
-                            <excludeDefaultDirectories>true</excludeDefaultDirectories>
-                            <filesets>
-                                <fileset>
-                                    <directory>src/main/resources</directory>
-                                    <includes>
-                                        <include>org/**</include>
-                                    </includes>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>
