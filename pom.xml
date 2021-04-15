@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>RESTEasy Extensions</name>
-    <description>Resteasy extensions</description>
+    <description>Resteasy Extensions and Utilities</description>
 
     <groupId>org.jboss.resteasy</groupId>
     <artifactId>resteasy-extensions</artifactId>
@@ -17,20 +17,10 @@
     <packaging>pom</packaging>
 
     <properties>
-        <jboss.home />
         <!-- print logs to file by default -->
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
-        <!-- Modularized JDK support (various workarounds) - activated via profile -->
-        <modular.jdk.args />
-        <modular.jdk.props />
-        <!-- maven-enforcer-plugin -->
-        <maven.min.version>3.2.5</maven.min.version>
-        <jdk.min.version>${maven.compiler.source}</jdk.min.version>
-        <!-- maven-surefire-plugin -->
-        <surefire.system.args>-Xms512m -Xmx512m ${modular.jdk.args} ${modular.jdk.props}</surefire.system.args>
-        <!-- Plugins versions -->
+        <!-- Dependency versions, please keep in alphabetical order -->
         <version.javax.ws.rs-api>1.0.2.Final</version.javax.ws.rs-api>
-        <version.org.jacoco.plugin>0.7.9</version.org.jacoco.plugin>
         <version.org.jboss.logging.jboss-logging>3.4.1.Final</version.org.jboss.logging.jboss-logging>
         <version.org.jboss.logging.jboss-logging-annotations>2.2.1.Final</version.org.jboss.logging.jboss-logging-annotations>
         <version.org.slf4j>1.7.30</version.org.slf4j>
@@ -40,13 +30,13 @@
 
     <licenses>
         <license>
-            <name>EPL 2.0</name>
-            <url>https://www.eclipse.org/legal/epl-2.0/</url>
+            <name>Eclipse Public License 2.0</name>
+            <url>https://www.eclipse.org/legal/epl-v20.html</url>
             <distribution>repo</distribution>
         </license>
         <license>
-            <name>GPL2 w/ CPE</name>
-            <url>https://www.gnu.org/software/classpath/license.html</url>
+            <name>GNU General Public License, Version 2 with the Classpath Exception</name>
+            <url>https://repository.jboss.org/licenses/gpl-2.0-ce.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -54,26 +44,14 @@
     <scm>
         <connection>scm:git:git://github.com/resteasy/resteasy-extensions.git</connection>
         <developerConnection>scm:git:git@github.com:resteasy/resteasy-extensions.git</developerConnection>
-        <url>https://github.com/resteasy/resteasy-extensions/tree/master/</url>
-      <tag>HEAD</tag>
-  </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>jboss-releases-repository</id>
-            <name>JBoss Releases Repository</name>
-            <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
+        <url>https://github.com/resteasy/resteasy-extensions/</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
         <system>JIRA</system>
-        <url>https://jira.jboss.com/jira/browse/RESTEASY</url>
+        <url>https://issues.redhat.com/browse/RESTEASY</url>
     </issueManagement>
-
-    <developers>
-        <developer />
-    </developers>
 
     <modules>
         <module>tracing</module>
@@ -93,7 +71,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>${version.checkstyle.plugin}</version>
                         <configuration>
                             <configLocation>checkstyle.xml</configLocation>
                             <consoleOutput>true</consoleOutput>
@@ -116,19 +93,6 @@
             </build>
         </profile>
     </profiles>
-
-    <contributors>
-        <contributor />
-    </contributors>
-
-    <repositories>
-        <repository>
-            <id>jboss</id>
-            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -175,45 +139,12 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${version.surefire.plugin}</version>
-                    <configuration>
-                        <forkMode>once</forkMode>
-                        <runOrder>alphabetical</runOrder>
-                        <argLine>${surefire.system.args}</argLine>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${version.javadoc.plugin}</version>
                     <configuration>
-                        <minmemory>128m</minmemory>
-                        <maxmemory>1024m</maxmemory>
-                        <quiet>false</quiet>
-                        <aggregate>true</aggregate>
                         <excludePackageNames>
                             com.restfully.*:org.jboss.resteasy.examples.*:se.unlogic.*:org.jboss.resteasy.tests.*
                         </excludePackageNames>
                     </configuration>
-                      <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>${version.org.eclipse.jetty}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${version.org.jacoco.plugin}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
