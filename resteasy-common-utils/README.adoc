@@ -1,0 +1,34 @@
+= RESTEasy Common Utilities
+
+This library offers some utilities for https://jakarta.ee/specifications/restful-ws/[Jakarta RESTful Web Services]
+applications.
+
+== Usage
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.jboss.resteasy</groupId>
+    <artifactId>resteasy-common-utils</artifactId>
+    <version>${version.org.jboss.resteasy.resteasy-extensions}</version>
+</dependency>
+----
+
+== Encoding
+
+You can use the `Encoder` API to implement the encoding of strings.
+By default, an `XmlEncoder` is provided.
+
+=== Example Usage
+
+[source,java]
+----
+@GET
+@Path("/example/{text}")
+@Consumes(MediaType.TEXT_PLAIN)
+@Produces(MediaType.TEXT_HTML)
+public Response append(@PathParam("text") final String text) {
+    final Encoder encoder = Encoder.resolve();
+    return Response.ok("<div>" + encoder.encode(text) + "</div>").build();
+}
+----

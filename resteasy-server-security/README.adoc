@@ -1,0 +1,39 @@
+= RESTEasy Server Security Utilities
+
+This library provides utilities for added security for https://jakarta.ee/specifications/restful-ws/[Jakarta RESTful Web Services].
+
+== Usage
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.jboss.resteasy</groupId>
+    <artifactId>resteasy-server-security</artifactId>
+    <version>${version.org.jboss.resteasy.resteasy-extensions}</version>
+</dependency>
+----
+
+== Encoding Parameters
+
+The simplest way to encode parameters is to include the library in your deployment.
+By default, it will encode parameters annotated with:
+
+* `@PathParam`
+* `@QueryParam`
+* `@MatrixParam`
+* `@FormParam`
+
+You can implement an `org.jboss.resteasy.security.encoding.spi.EncoderConfiguration`, which is loaded as a service, to override the default configuration.
+This includes overriding the parameter annotations which automatically trigger a parameter to be encoded.
+It also allows you to completely disable this feature.
+
+=== Annotations
+
+The `@EncodeParameter` annotation allows you to specifically enable or disable encoding of a parameter or parameters if placed on the method or type.
+
+The `@EncodeEntity` annotation can be placed on a type or method to encode, with a `ReaderInterceptor`, the entity from a response.
+
+== Resources
+
+* https://owasp.org/www-community/attacks/xss/[XSS attacks]
+

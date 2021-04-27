@@ -21,9 +21,16 @@
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
         <!-- Dependency versions, please keep in alphabetical order -->
         <version.javax.ws.rs-api>2.0.1.Final</version.javax.ws.rs-api>
+        <version.org.jboss.arquillian>1.7.0.Alpha9</version.org.jboss.arquillian>
         <version.org.jboss.logging.jboss-logging>3.4.1.Final</version.org.jboss.logging.jboss-logging>
         <version.org.jboss.logging.jboss-logging-annotations>2.2.1.Final</version.org.jboss.logging.jboss-logging-annotations>
+        <version.org.jboss.shrinkwrap.resolver>3.1.4</version.org.jboss.shrinkwrap.resolver>
+        <version.org.junit>5.7.0</version.org.junit>
+        <version.org.kohsuke.metainf-services>1.8</version.org.kohsuke.metainf-services>
         <version.org.slf4j>1.7.30</version.org.slf4j>
+
+        <maven.test.skip>false</maven.test.skip>
+        <skipTests>${maven.test.skip}</skipTests>
     </properties>
 
     <url>https://resteasy.github.io/</url>
@@ -56,6 +63,9 @@
     <modules>
         <module>tracing</module>
         <module>eagledns</module>
+        <module>resteasy-common-utils</module>
+        <module>resteasy-server-security</module>
+        <module>integration-tests</module>
     </modules>
 
     <profiles>
@@ -97,6 +107,14 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.org.jboss.arquillian}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>
                 <version>${version.org.jboss.logging.jboss-logging}</version>
@@ -118,11 +136,33 @@
                 <scope>provided</scope>
                 <optional>true</optional>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-bom</artifactId>
+                <version>${version.org.jboss.shrinkwrap.resolver}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
 
             <dependency>
                 <groupId>org.jboss.spec.javax.ws.rs</groupId>
                 <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
                 <version>${version.javax.ws.rs-api}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${version.org.junit}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.kohsuke.metainf-services</groupId>
+                <artifactId>metainf-services</artifactId>
+                <version>${version.org.kohsuke.metainf-services}</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
