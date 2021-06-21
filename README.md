@@ -1,3 +1,5 @@
+[![Github CI](https://github.com/resteasy/resteasy-extensions/actions/workflows/maven.yml/badge.svg)](https://github.com/resteasy/resteasy-extensions/actions)
+
 &nbsp;[![EPL-2.0](https://img.shields.io/badge/license-EPL%202.0-green.svg)](https://www.eclipse.org/legal/epl-2.0/)
 &nbsp;[![GPL+CPE-2.0](https://img.shields.io/badge/license-GPL%202.0%2BCPE-green.svg)](https://www.gnu.org/software/classpath/license.html)
 
