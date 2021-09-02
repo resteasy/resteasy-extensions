@@ -5,20 +5,34 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches: [ '**' ]
   pull_request:
-    branches: [ main ]
+    branches: [ '**' ]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+        java: [ '8', '11' ]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+     - uses: actions/checkout@v2
+     - uses: actions/cache@v1
+       with:
+         path: ~/.m2/repository
+         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+         restore-keys: |
+           ${{ runner.os }}-maven-
+     - name: Set up JDK ${{ matrix.java }}
+       uses: actions/setup-java@v1
+       with:
+         java-version: ${{ matrix.java }}
+         distribution: 'adopt'
+     - name:  Build on ${{ runner.os }} with Java ${{ matrix.java }}
+       run: mvn -U -B clean install
+
