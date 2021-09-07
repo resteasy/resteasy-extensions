@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
-import org.jboss.resteasy.resteasy_jaxrs.i18n.LogMessages;
+import org.jboss.logging.Logger;
 import org.jboss.resteasy.spi.AsyncOutputStream;
 import org.jboss.resteasy.spi.AsyncWriterInterceptor;
 import org.jboss.resteasy.spi.AsyncWriterInterceptorContext;
@@ -51,6 +51,7 @@ import org.jboss.resteasy.spi.NoLogWebApplicationException;
  */
 @ConstrainedTo(RuntimeType.SERVER)
 public class ServerCacheInterceptor implements WriterInterceptor, AsyncWriterInterceptor {
+    private static final Logger LOGGER = Logger.getLogger(ServerCacheInterceptor.class);
     protected ServerCache cache;
 
     public ServerCacheInterceptor(final ServerCache cache) {
@@ -163,7 +164,7 @@ public class ServerCacheInterceptor implements WriterInterceptor, AsyncWriterInt
 
     @Override
     public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
-        LogMessages.LOGGER.debugf("Interceptor : %s,  Method : aroundWriteTo", getClass().getName());
+        LOGGER.debugf("Interceptor : %s,  Method : aroundWriteTo", getClass().getName());
 
         CacheControl cc = getCacheControl(context.getHeaders());
         if (cc == null) {
@@ -186,7 +187,7 @@ public class ServerCacheInterceptor implements WriterInterceptor, AsyncWriterInt
 
     @Override
     public CompletionStage<Void> asyncAroundWriteTo(AsyncWriterInterceptorContext context) {
-        LogMessages.LOGGER.debugf("Interceptor : %s,  Method : aroundWriteTo", getClass().getName());
+        LOGGER.debugf("Interceptor : %s,  Method : aroundWriteTo", getClass().getName());
 
         CacheControl cc = getCacheControl(context.getHeaders());
         if (cc == null) {

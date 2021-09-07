@@ -35,7 +35,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 
 import org.infinispan.Cache;
-import org.jboss.resteasy.specimpl.MultivaluedTreeMap;
 
 /**
  * An HTTP cache that behaves somewhat the same way as a proxy (like Squid)
