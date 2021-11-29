@@ -266,7 +266,7 @@ public class ReflectionUtils {
 				continue;
 			}
 			
-			if(method.getParameterTypes().length != argumentCount){
+			if(method.getParameterCount() != argumentCount){
 				
 				continue;
 			}
