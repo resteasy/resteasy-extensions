@@ -18,7 +18,7 @@ public class MethodComparator<T> implements Comparator<T> {
 		
 		for(Method method : methods){
 			
-			if(method.getName().equals(methodName) && Comparable.class.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 0){
+			if(method.getName().equals(methodName) && Comparable.class.isAssignableFrom(method.getReturnType()) && method.getParameterCount() == 0){
 				
 				this.method = method;
 				break;

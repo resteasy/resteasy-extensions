@@ -42,7 +42,7 @@ public class PreparedStatementQueryMethods {
 
 			for(Method method : methods){
 
-				if(method.getName().startsWith("set") && !method.getName().equals("setObject") && method.getParameterTypes().length == 2 && method.getParameterTypes()[0] == int.class){
+				if(method.getName().startsWith("set") && !method.getName().equals("setObject") && method.getParameterCount() == 2 && method.getParameterTypes()[0] == int.class){
 
 					//System.out.println("Adding method " + method);
 					QUERY_METHOD_MAP.put(method.getParameterTypes()[1], method);
