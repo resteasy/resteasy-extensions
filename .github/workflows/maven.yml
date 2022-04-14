@@ -18,21 +18,21 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest ]
-        java: [ '8', '11' ]
+        java: [ '11', '17' ]
 
     steps:
-     - uses: actions/checkout@v2
-     - uses: actions/cache@v1
-       with:
-         path: ~/.m2/repository
-         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-         restore-keys: |
-           ${{ runner.os }}-maven-
-     - name: Set up JDK ${{ matrix.java }}
-       uses: actions/setup-java@v1
-       with:
-         java-version: ${{ matrix.java }}
-         distribution: 'adopt'
-     - name:  Build on ${{ runner.os }} with Java ${{ matrix.java }}
-       run: mvn -U -B clean install
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'adopt'
+      - name: Build on ${{ runner.os }} with Java ${{ matrix.java }}
+        run: mvn -U -B clean install
 
