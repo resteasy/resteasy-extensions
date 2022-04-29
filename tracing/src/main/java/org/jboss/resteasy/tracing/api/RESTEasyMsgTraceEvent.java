@@ -6,67 +6,67 @@ package org.jboss.resteasy.tracing.api;
 public enum RESTEasyMsgTraceEvent implements RESTEasyTracingEvent {
 
     /**
-     * {@link jakarta.ws.rs.ext.ReaderInterceptor} invocation before a call to {@code context.proceed()}.
+     * {@code jakarta.ws.rs.ext.ReaderInterceptor} invocation before a call to {@code context.proceed()}.
      */
     RI_BEFORE(RESTEasyTracingLevel.TRACE, "RI", "%s BEFORE context.proceed()"),
     /**
-     * {@link jakarta.ws.rs.ext.ReaderInterceptor} invocation after a call to {@code context.proceed()}.
+     * {@code jakarta.ws.rs.ext.ReaderInterceptor} invocation after a call to {@code context.proceed()}.
      */
     RI_AFTER(RESTEasyTracingLevel.TRACE, "RI", "%s AFTER context.proceed()"),
     /**
-     * {@link jakarta.ws.rs.ext.ReaderInterceptor} invocation summary.
+     * {@code jakarta.ws.rs.ext.ReaderInterceptor} invocation summary.
      */
     RI_SUMMARY(RESTEasyTracingLevel.SUMMARY, "RI", "ReadFrom summary: %s interceptors"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyReader} lookup.
+     * {@code jakarta.ws.rs.ext.MessageBodyReader} lookup.
      */
     MBR_FIND(RESTEasyTracingLevel.TRACE, "MBR", "Find MBR for type=[%s] genericType=[%s] mediaType=[%s] annotations=%s"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyReader#isReadable} returned {@code false}.
+     * {@code jakarta.ws.rs.ext.MessageBodyReader#isReadable} returned {@code false}.
      */
     MBR_NOT_READABLE(RESTEasyTracingLevel.VERBOSE, "MBR", "%s is NOT readable"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyReader} selected.
+     * {@code jakarta.ws.rs.ext.MessageBodyReader} selected.
      */
     MBR_SELECTED(RESTEasyTracingLevel.TRACE, "MBR", "%s IS readable"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyReader} skipped as higher-priority reader has been selected already.
+     * {@code jakarta.ws.rs.ext.MessageBodyReader} skipped as higher-priority reader has been selected already.
      */
     MBR_SKIPPED(RESTEasyTracingLevel.VERBOSE, "MBR", "%s is skipped"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyReader#readFrom} invoked.
+     * {@code jakarta.ws.rs.ext.MessageBodyReader#readFrom} invoked.
      */
     MBR_READ_FROM(RESTEasyTracingLevel.TRACE, "MBR", "ReadFrom by %s"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyWriter} lookup.
+     * {@code jakarta.ws.rs.ext.MessageBodyWriter} lookup.
      */
     MBW_FIND(RESTEasyTracingLevel.TRACE, "MBW", "Find MBW for type=[%s] genericType=[%s] mediaType=[%s] annotations=%s"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyWriter#isWriteable} returned {@code false}.
+     * {@code jakarta.ws.rs.ext.MessageBodyWriter#isWriteable} returned {@code false}.
      */
     MBW_NOT_WRITEABLE(RESTEasyTracingLevel.VERBOSE, "MBW", "%s is NOT writeable"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyWriter#isWriteable} selected.
+     * {@code jakarta.ws.rs.ext.MessageBodyWriter#isWriteable} selected.
      */
     MBW_SELECTED(RESTEasyTracingLevel.TRACE, "MBW", "%s IS writeable"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyWriter} skipped as higher-priority writer has been selected already.
+     * {@code jakarta.ws.rs.ext.MessageBodyWriter} skipped as higher-priority writer has been selected already.
      */
     MBW_SKIPPED(RESTEasyTracingLevel.VERBOSE, "MBW", "%s is skipped"),
     /**
-     * {@link jakarta.ws.rs.ext.MessageBodyWriter#writeTo} invoked.
+     * {@code jakarta.ws.rs.ext.MessageBodyWriter#writeTo} invoked.
      */
     MBW_WRITE_TO(RESTEasyTracingLevel.TRACE, "MBW", "WriteTo by %s"),
     /**
-     * {@link jakarta.ws.rs.ext.WriterInterceptor} invocation before a call to {@code context.proceed()}.
+     * {@code jakarta.ws.rs.ext.WriterInterceptor} invocation before a call to {@code context.proceed()}.
      */
     WI_BEFORE(RESTEasyTracingLevel.TRACE, "WI", "%s BEFORE context.proceed()"),
     /**
-     * {@link jakarta.ws.rs.ext.WriterInterceptor} invocation after a call to {@code context.proceed()}.
+     * {@code jakarta.ws.rs.ext.WriterInterceptor} invocation after a call to {@code context.proceed()}.
      */
     WI_AFTER(RESTEasyTracingLevel.TRACE, "WI", "%s AFTER context.proceed()"),
     /**
-     * {@link jakarta.ws.rs.ext.ReaderInterceptor} invocation summary.
+     * {@code jakarta.ws.rs.ext.ReaderInterceptor} invocation summary.
      */
     WI_SUMMARY(RESTEasyTracingLevel.SUMMARY, "WI", "WriteTo summary: %s interceptors");
 
