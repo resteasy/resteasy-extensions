@@ -9,86 +9,83 @@ import org.jboss.logging.Logger;
 
 import se.unlogic.standardutils.settings.XMLSettingNode;
 
-
 public class EagleManagerClient {
 
-	public static EagleManager getManager(String host, int port, String password) throws RemoteException, NotBoundException {
+    public static EagleManager getManager(String host, int port, String password) throws RemoteException, NotBoundException {
 
-		Registry registry = LocateRegistry.getRegistry(host,port);
+        Registry registry = LocateRegistry.getRegistry(host, port);
 
-		EagleLogin eagleLogin = (EagleLogin) registry.lookup("eagleLogin");
+        EagleLogin eagleLogin = (EagleLogin) registry.lookup("eagleLogin");
 
-		return eagleLogin.login(password);
-	}
+        return eagleLogin.login(password);
+    }
 
+    public static void main(String[] args) {
 
+        Logger LOG = Logger.getLogger(EagleManagerClient.class);
 
-	public static void main(String[] args) {
+        if (args.length != 3 || (!args[2].equals("reload") && !args[2].equals("shutdown"))) {
 
-		Logger LOG = Logger.getLogger(EagleManagerClient.class);
+            LOG.info("Usage EagleManagerClient config host command");
+            LOG.info("Valid commands are: reload, shutdown");
+            return;
+        }
 
-		if(args.length != 3 || (!args[2].equals("reload") && !args[2].equals("shutdown"))){
+        XMLSettingNode configFile;
 
-			LOG.info("Usage EagleManagerClient config host command");
-			LOG.info("Valid commands are: reload, shutdown");
-			return;
-		}
+        try {
+            configFile = new XMLSettingNode(args[0]);
 
-		XMLSettingNode configFile;
+        } catch (Exception e) {
 
-		try {
-			configFile = new XMLSettingNode(args[0]);
+            LOG.info("Unable to open config file " + args[0] + "!");
+            return;
+        }
 
-		} catch (Exception e) {
+        String password = configFile.getString("/Config/System/RemoteManagementPassword");
 
-			LOG.info("Unable to open config file " + args[0] + "!");
-			return;
-		}
+        if (password == null) {
 
-		String password = configFile.getString("/Config/System/RemoteManagementPassword");
+            LOG.info("No remote management password found in config!");
+            return;
+        }
 
-		if(password == null){
+        Integer port = configFile.getInteger("/Config/System/RemoteManagementPort");
 
-			LOG.info("No remote management password found in config!");
-			return;
-		}
+        if (port == null) {
 
-		Integer port = configFile.getInteger("/Config/System/RemoteManagementPort");
+            LOG.info("No remote management port found in config!");
+            return;
+        }
 
-		if(port == null){
+        try {
+            EagleManager eagleManager = getManager(args[1], port, password);
 
-			LOG.info("No remote management port found in config!");
-			return;
-		}
+            if (eagleManager == null) {
 
-		try {
-			EagleManager eagleManager = getManager(args[1], port, password);
+                LOG.info("Invalid password!");
 
-			if(eagleManager == null){
+            } else {
 
-				LOG.info("Invalid password!");
+                if (args[2].equals("reload")) {
 
-			}else{
+                    eagleManager.reloadZones();
+                    LOG.info("Zones reloaded");
 
-				if(args[2].equals("reload")){
+                } else {
 
-					eagleManager.reloadZones();
-					LOG.info("Zones reloaded");
+                    eagleManager.shutdown();
+                    LOG.info("Shutdown command sent");
+                }
+            }
 
-				}else{
+        } catch (RemoteException e) {
 
-					eagleManager.shutdown();
-					LOG.info("Shutdown command sent");
-				}
-			}
+            LOG.info("Unable to connect " + e);
 
-		} catch (RemoteException e) {
+        } catch (NotBoundException e) {
 
-			LOG.info("Unable to connect " + e);
-
-		} catch (NotBoundException e) {
-
-			LOG.info("Unable to connect " + e);
-		}
-	}
+            LOG.info("Unable to connect " + e);
+        }
+    }
 }

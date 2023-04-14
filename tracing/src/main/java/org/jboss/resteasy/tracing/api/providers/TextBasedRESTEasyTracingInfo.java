@@ -1,11 +1,11 @@
 package org.jboss.resteasy.tracing.api.providers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.resteasy.tracing.api.RESTEasyTracingInfo;
 import org.jboss.resteasy.tracing.api.RESTEasyTracingInfoFormat;
 import org.jboss.resteasy.tracing.api.RESTEasyTracingMessage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TextBasedRESTEasyTracingInfo extends RESTEasyTracingInfo {
 
@@ -73,6 +73,5 @@ public class TextBasedRESTEasyTracingInfo extends RESTEasyTracingInfo {
         }
         return messages;
     }
-
 
 }

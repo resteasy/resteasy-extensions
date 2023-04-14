@@ -30,8 +30,39 @@
     <packaging>pom</packaging>
 
     <name>RESTEasy Cache</name>
+
+    <properties>
+        <version.org.infinispan>14.0.8.Final</version.org.infinispan>
+    </properties>
+
     <modules>
         <module>cache-core</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+
+            <dependency>
+                <groupId>org.infinispan</groupId>
+                <artifactId>infinispan-core</artifactId>
+                <version>${version.org.infinispan}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.spec.javax.transaction</groupId>
+                        <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.enterprise</groupId>
+                        <artifactId>cdi-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.inject</groupId>
+                        <artifactId>javax.inject</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

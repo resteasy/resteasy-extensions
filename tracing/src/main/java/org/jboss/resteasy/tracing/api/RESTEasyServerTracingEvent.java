@@ -2,7 +2,7 @@ package org.jboss.resteasy.tracing.api;
 
 public enum RESTEasyServerTracingEvent implements RESTEasyTracingEvent {
 
-     /**
+    /**
      * Request processing started.
      */
     START(RESTEasyTracingLevel.SUMMARY, "START", null),
@@ -92,7 +92,7 @@ public enum RESTEasyServerTracingEvent implements RESTEasyTracingEvent {
     private final String category;
     private final String messageFormat;
 
-    private RESTEasyServerTracingEvent(RESTEasyTracingLevel level, String category, String messageFormat) {
+    RESTEasyServerTracingEvent(final RESTEasyTracingLevel level, final String category, final String messageFormat) {
         this.level = level;
         this.category = category;
         this.messageFormat = messageFormat;

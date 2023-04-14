@@ -1,89 +1,89 @@
 package se.unlogic.eagledns;
 
+import java.sql.Timestamp;
+
 import org.xbill.DNS.Name;
 import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Zone;
 
-import java.sql.Timestamp;
-
 /**
- * This class is used to hold data secondary zones when they are loaded from ZoneProviders. The actual Zone field may be left blank if the ZoneProvider has no previously stored copy of the zoneBackup.
- * 
+ * This class is used to hold data secondary zones when they are loaded from ZoneProviders. The actual Zone field may be left
+ * blank if the ZoneProvider has no previously stored copy of the zoneBackup.
+ *
  * @author Robert "Unlogic" Olofsson
- * 
+ *
  */
 public class SecondaryZone {
 
-	private Name zoneName;
-	private String remoteServerAddress;
-	private String dclass;
-	private Timestamp downloaded;
-	private Zone zoneCopy;
+    private Name zoneName;
+    private String remoteServerAddress;
+    private String dclass;
+    private Timestamp downloaded;
+    private Zone zoneCopy;
 
-	public SecondaryZone(String zoneName, String remoteServerAddress, String dclass) throws TextParseException {
+    public SecondaryZone(String zoneName, String remoteServerAddress, String dclass) throws TextParseException {
 
-		super();
-		this.zoneName = Name.fromString(zoneName, Name.root);
-		this.remoteServerAddress = remoteServerAddress;
-		this.dclass = dclass;
-	}
+        super();
+        this.zoneName = Name.fromString(zoneName, Name.root);
+        this.remoteServerAddress = remoteServerAddress;
+        this.dclass = dclass;
+    }
 
-	public SecondaryZone(String zoneName, String remoteServerAddress, String dclass, Timestamp zoneDownloaded, Zone zone) throws TextParseException {
+    public SecondaryZone(String zoneName, String remoteServerAddress, String dclass, Timestamp zoneDownloaded, Zone zone)
+            throws TextParseException {
 
-		this.zoneName = Name.fromString(zoneName, Name.root);
-		this.remoteServerAddress = remoteServerAddress;
-		this.dclass = dclass;
-		this.zoneCopy = zone;
-		this.downloaded = zoneDownloaded;
-	}
+        this.zoneName = Name.fromString(zoneName, Name.root);
+        this.remoteServerAddress = remoteServerAddress;
+        this.dclass = dclass;
+        this.zoneCopy = zone;
+        this.downloaded = zoneDownloaded;
+    }
 
-	public Name getZoneName() {
+    public Name getZoneName() {
 
-		return zoneName;
-	}
+        return zoneName;
+    }
 
-	public void setZoneName(Name zoneName) {
+    public void setZoneName(Name zoneName) {
 
-		this.zoneName = zoneName;
-	}
+        this.zoneName = zoneName;
+    }
 
-	public String getRemoteServerAddress() {
+    public String getRemoteServerAddress() {
 
-		return remoteServerAddress;
-	}
+        return remoteServerAddress;
+    }
 
-	public void setRemoteServerAddress(String remoteServerIP) {
+    public void setRemoteServerAddress(String remoteServerIP) {
 
-		this.remoteServerAddress = remoteServerIP;
-	}
+        this.remoteServerAddress = remoteServerIP;
+    }
 
-	public Zone getZoneCopy() {
+    public Zone getZoneCopy() {
 
-		return zoneCopy;
-	}
+        return zoneCopy;
+    }
 
-	public void setZoneCopy(Zone zone) {
+    public void setZoneCopy(Zone zone) {
 
-		this.zoneCopy = zone;
-	}
+        this.zoneCopy = zone;
+    }
 
-	public String getDclass() {
-		return dclass;
-	}
+    public String getDclass() {
+        return dclass;
+    }
 
-	public void setDclass(String dclass) {
-		this.dclass = dclass;
-	}
+    public void setDclass(String dclass) {
+        this.dclass = dclass;
+    }
 
-	
-	public Timestamp getDownloaded() {
-	
-		return downloaded;
-	}
+    public Timestamp getDownloaded() {
 
-	
-	public void setDownloaded(Timestamp zoneDownloaded) {
-	
-		this.downloaded = zoneDownloaded;
-	}
+        return downloaded;
+    }
+
+    public void setDownloaded(Timestamp zoneDownloaded) {
+
+        this.downloaded = zoneDownloaded;
+    }
 }

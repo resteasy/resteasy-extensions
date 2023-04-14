@@ -7,59 +7,58 @@
  ******************************************************************************/
 package se.unlogic.standardutils.populators;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import se.unlogic.standardutils.dao.BeanResultSetPopulator;
 import se.unlogic.standardutils.numbers.NumberUtils;
 import se.unlogic.standardutils.validation.StringFormatValidator;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+public class IntegerPopulator extends BaseStringPopulator<Integer> implements BeanResultSetPopulator<Integer> {
 
+    private static final IntegerPopulator POPULATOR = new IntegerPopulator();
 
-public class IntegerPopulator extends BaseStringPopulator<Integer> implements BeanResultSetPopulator<Integer>{
+    public static IntegerPopulator getPopulator() {
+        return POPULATOR;
+    }
 
-	private static final IntegerPopulator POPULATOR = new IntegerPopulator();
+    private int columnIndex = 1;
 
-	public static IntegerPopulator getPopulator(){
-		return POPULATOR;
-	}
+    public IntegerPopulator() {
+        super();
+    }
 
-	private int columnIndex = 1;
+    public IntegerPopulator(int columnIndex) {
+        super();
 
-	public IntegerPopulator() {
-		super();
-	}
+        this.columnIndex = columnIndex;
+    }
 
-	public IntegerPopulator(int columnIndex) {
-		super();
+    public IntegerPopulator(String populatorID, StringFormatValidator formatValidator) {
+        super(populatorID, formatValidator);
+    }
 
-		this.columnIndex = columnIndex;
-	}
+    public IntegerPopulator(String populatorID) {
+        super(populatorID);
+    }
 
-	public IntegerPopulator(String populatorID, StringFormatValidator formatValidator) {
-		super(populatorID, formatValidator);
-	}
+    public Integer populate(ResultSet rs) throws SQLException {
+        return rs.getInt(columnIndex);
+    }
 
-	public IntegerPopulator(String populatorID) {
-		super(populatorID);
-	}
+    public Integer getValue(String value) {
 
-	public Integer populate(ResultSet rs) throws SQLException {
-		return rs.getInt(columnIndex);
-	}
+        return Integer.valueOf(value);
+    }
 
-	public Integer getValue(String value) {
+    @Override
+    public boolean validateDefaultFormat(String value) {
 
-		return Integer.valueOf(value);
-	}
+        return NumberUtils.isInt(value);
+    }
 
-	@Override
-	public boolean validateDefaultFormat(String value) {
+    public Class<? extends Integer> getType() {
 
-		return NumberUtils.isInt(value);
-	}
-
-	public Class<? extends Integer> getType() {
-
-		return Integer.class;
-	}
+        return Integer.class;
+    }
 }

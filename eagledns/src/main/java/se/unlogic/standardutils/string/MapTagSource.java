@@ -3,34 +3,33 @@ package se.unlogic.standardutils.string;
 import java.util.HashMap;
 import java.util.Set;
 
-
 public class MapTagSource implements TagSource {
 
-	protected HashMap<String,String> tagMap;
-	
-	public MapTagSource(){
-		
-		tagMap = new HashMap<String,String>();
-	}
-	
-	public MapTagSource(HashMap<String, String> tagMap) {
+    protected HashMap<String, String> tagMap;
 
-		super();
-		this.tagMap = tagMap;
-	}
+    public MapTagSource() {
 
-	public void addTag(String tag, String value){
-		
-		tagMap.put(tag, value);
-	}
-	
-	public Set<String> getTags() {
+        tagMap = new HashMap<String, String>();
+    }
 
-		return tagMap.keySet();
-	}
+    public MapTagSource(HashMap<String, String> tagMap) {
 
-	public String getTagValue(String tag) {
+        super();
+        this.tagMap = tagMap;
+    }
 
-		return tagMap.get(tag);
-	}
+    public void addTag(String tag, String value) {
+
+        tagMap.put(tag, value);
+    }
+
+    public Set<String> getTags() {
+
+        return tagMap.keySet();
+    }
+
+    public String getTagValue(String tag) {
+
+        return tagMap.get(tag);
+    }
 }

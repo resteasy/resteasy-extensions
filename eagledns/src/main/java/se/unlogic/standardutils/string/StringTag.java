@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD,ElementType.METHOD})
+@Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface StringTag {
-	String name() default "";
-	//Class<? extends Stringyfier> valueFormatter() default DummyStringyfier.class;
+    String name() default "";
+    //Class<? extends Stringyfier> valueFormatter() default DummyStringyfier.class;
 }

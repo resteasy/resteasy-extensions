@@ -1,10 +1,9 @@
 package se.unlogic.standardutils.validation;
 
-
 public class PositiveStringIntegerValidator extends StringIntegerValidator {
 
-	public PositiveStringIntegerValidator() {
+    public PositiveStringIntegerValidator() {
 
-		super(1, null);
-	}	
+        super(1, null);
+    }
 }

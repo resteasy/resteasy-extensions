@@ -7,9 +7,8 @@
  ******************************************************************************/
 package se.unlogic.standardutils.validation;
 
-
 public interface StringFormatValidator {
 
-	boolean validateFormat(String value);
+    boolean validateFormat(String value);
 
 }

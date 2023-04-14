@@ -9,18 +9,17 @@ package se.unlogic.standardutils.threads;
 
 import java.util.concurrent.BlockingQueue;
 
-
 public class SimpleTaskGroup implements TaskGroup {
 
-	private BlockingQueue<? extends Runnable> queue;
-	
-	public SimpleTaskGroup(BlockingQueue<? extends Runnable> queue) {
-		
-		this.queue = queue;
-	}
+    private BlockingQueue<? extends Runnable> queue;
 
-	public BlockingQueue<? extends Runnable> getTasks() {
-		
-		return queue;
-	}
+    public SimpleTaskGroup(BlockingQueue<? extends Runnable> queue) {
+
+        this.queue = queue;
+    }
+
+    public BlockingQueue<? extends Runnable> getTasks() {
+
+        return queue;
+    }
 }

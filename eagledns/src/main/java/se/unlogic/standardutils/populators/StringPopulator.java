@@ -7,37 +7,38 @@
  ******************************************************************************/
 package se.unlogic.standardutils.populators;
 
-import se.unlogic.standardutils.dao.BeanResultSetPopulator;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class StringPopulator extends BaseStringPopulator<String> implements BeanResultSetPopulator<String>, BeanStringPopulator<String>{
+import se.unlogic.standardutils.dao.BeanResultSetPopulator;
 
-	public StringPopulator() {
-		super();
-	}
+public class StringPopulator extends BaseStringPopulator<String>
+        implements BeanResultSetPopulator<String>, BeanStringPopulator<String> {
 
-	private static final StringPopulator POPULATOR = new StringPopulator();
+    public StringPopulator() {
+        super();
+    }
 
-	public String populate(ResultSet rs) throws SQLException {
-		return rs.getString(1);
-	}
+    private static final StringPopulator POPULATOR = new StringPopulator();
 
-	public static StringPopulator getPopulator(){
-		return POPULATOR;
-	}
+    public String populate(ResultSet rs) throws SQLException {
+        return rs.getString(1);
+    }
 
-	public String getValue(String value) {
-		return value;
-	}
+    public static StringPopulator getPopulator() {
+        return POPULATOR;
+    }
 
-	@Override
-	public boolean validateDefaultFormat(String value) {
-		return true;
-	}
+    public String getValue(String value) {
+        return value;
+    }
 
-	public Class<? extends String> getType() {
-		return String.class;
-	}
+    @Override
+    public boolean validateDefaultFormat(String value) {
+        return true;
+    }
+
+    public Class<? extends String> getType() {
+        return String.class;
+    }
 }

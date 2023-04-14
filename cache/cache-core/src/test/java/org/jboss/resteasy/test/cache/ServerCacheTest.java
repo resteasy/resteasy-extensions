@@ -56,7 +56,6 @@ public class ServerCacheTest {
     private static int htmlCount = 0;
     private static Client client;
 
-
     @BeforeAll
     public static void beforeClass() {
         server = new NettyJaxrsServer();
@@ -166,7 +165,6 @@ public class ServerCacheTest {
             Assertions.assertEquals(response.readEntity(String.class), "stuff");
         }
 
-
         Thread.sleep(2000);
 
         {
@@ -178,7 +176,6 @@ public class ServerCacheTest {
             response.close();
         }
     }
-
 
     @Test
     public void testCache() throws Exception {
@@ -194,7 +191,6 @@ public class ServerCacheTest {
             Assertions.assertNotNull(etag);
             Assertions.assertEquals(response.readEntity(String.class), "hello world" + 1);
         }
-
 
         {
             Builder request = client.target(generateURL("/cache")).request();
@@ -214,7 +210,6 @@ public class ServerCacheTest {
             Assertions.assertEquals(Response.Status.NOT_MODIFIED.getStatusCode(), response.getStatus());
             response.close();
         }
-
 
         Thread.sleep(2000);
 
@@ -257,7 +252,6 @@ public class ServerCacheTest {
             Assertions.assertEquals(response.readEntity(String.class), "hello world" + 3);
         }
     }
-
 
     @Test
     public void testAccepts() {

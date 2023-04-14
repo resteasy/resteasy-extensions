@@ -7,10 +7,9 @@
  ******************************************************************************/
 package se.unlogic.standardutils.validation;
 
-
 public class TCPPortStringFormatValidator extends StringIntegerValidator {
 
-	public TCPPortStringFormatValidator(){
-		super(1,65536);
-	}
+    public TCPPortStringFormatValidator() {
+        super(1, 65536);
+    }
 }

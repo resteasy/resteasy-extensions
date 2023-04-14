@@ -10,26 +10,26 @@ package se.unlogic.standardutils.dao.querys;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class IntegerKeyCollector implements GeneratedKeyCollector {
 
-	private Integer keyValue;
-	private int columnIndex = 1;
+    private Integer keyValue;
+    private int columnIndex = 1;
 
-	public IntegerKeyCollector() {}
+    public IntegerKeyCollector() {
+    }
 
-	public IntegerKeyCollector(int columnIndex) {
-		super();
-		this.columnIndex = columnIndex;
-	}
+    public IntegerKeyCollector(int columnIndex) {
+        super();
+        this.columnIndex = columnIndex;
+    }
 
-	public void collect(ResultSet rs) throws SQLException {
+    public void collect(ResultSet rs) throws SQLException {
 
-		keyValue = rs.getInt(columnIndex);
-	}
+        keyValue = rs.getInt(columnIndex);
+    }
 
-	public Integer getKeyValue() {
+    public Integer getKeyValue() {
 
-		return keyValue;
-	}
+        return keyValue;
+    }
 }

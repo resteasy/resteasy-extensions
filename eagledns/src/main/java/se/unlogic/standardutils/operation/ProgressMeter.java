@@ -9,145 +9,146 @@ package se.unlogic.standardutils.operation;
 
 import se.unlogic.standardutils.time.TimeUtils;
 
-
 public class ProgressMeter {
-	private long start;
-	private long finish;
-	private long currentPosition;
-	private long startTime;
-	private long endTime;
-	public ProgressMeter(){};
+    private long start;
+    private long finish;
+    private long currentPosition;
+    private long startTime;
+    private long endTime;
 
-	public ProgressMeter(long start, long finish){
-		this.start = start;
-		this.finish = finish;
-	}
+    public ProgressMeter() {
+    };
 
-	public ProgressMeter(boolean setStartTime){
-		if(setStartTime){
-			this.setStartTime();
-		}
-	}
+    public ProgressMeter(long start, long finish) {
+        this.start = start;
+        this.finish = finish;
+    }
 
-	public ProgressMeter(int start, int finish, int currentPosition){
-		this.start = start;
-		this.finish = finish;
-		this.currentPosition = currentPosition;
-	}
+    public ProgressMeter(boolean setStartTime) {
+        if (setStartTime) {
+            this.setStartTime();
+        }
+    }
 
-	public long getCurrentPosition() {
-		return currentPosition;
-	}
+    public ProgressMeter(int start, int finish, int currentPosition) {
+        this.start = start;
+        this.finish = finish;
+        this.currentPosition = currentPosition;
+    }
 
-	public synchronized void setCurrentPosition(int currentPosition) {
-		this.currentPosition = currentPosition;
-	}
+    public long getCurrentPosition() {
+        return currentPosition;
+    }
 
-	public synchronized void incrementCurrentPosition(){
-		this.currentPosition++;
-	}
+    public synchronized void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
 
-	public synchronized void decrementCurrentPosition(){
-		this.currentPosition--;
-	}
+    public synchronized void incrementCurrentPosition() {
+        this.currentPosition++;
+    }
 
-	public long getFinish() {
-		return finish;
-	}
+    public synchronized void decrementCurrentPosition() {
+        this.currentPosition--;
+    }
 
-	public void setFinish(long finish) {
-		this.finish = finish;
-	}
+    public long getFinish() {
+        return finish;
+    }
 
-	public long getStart() {
-		return start;
-	}
+    public void setFinish(long finish) {
+        this.finish = finish;
+    }
 
-	public void setStart(long start) {
-		this.start = start;
-	}
+    public long getStart() {
+        return start;
+    }
 
-	public int getPercentComplete(){
-		if(this.finish > this.start){
-			return (int)(((float)(this.currentPosition - this.start)/(float)(this.finish - this.start))*100f);
-		}else if(this.finish < this.start){
-			return (int)(((float)(this.start - this.currentPosition)/(float)(this.start - this.finish))*100f);
-		}else{
-			return -1;
-		}
-	}
+    public void setStart(long start) {
+        this.start = start;
+    }
 
-	public int getPercentRemaining(){
-		if(this.finish > this.start){
-			if(this.finish - this.currentPosition != 0){
-				return (int)(((float)(this.finish - this.currentPosition)/(float)(this.finish - this.start))*100f);
-			}else{
-				return 0;
-			}
-		}else if(this.finish < this.start){
-			if(this.currentPosition - this.finish != 0){
-				return (int)(((float)(this.currentPosition - this.finish)/(float)(this.start - this.finish))*100f);
-			}else{
-				return 0;
-			}
-		}else{
-			return -1;
-		}
-	}
+    public int getPercentComplete() {
+        if (this.finish > this.start) {
+            return (int) (((float) (this.currentPosition - this.start) / (float) (this.finish - this.start)) * 100f);
+        } else if (this.finish < this.start) {
+            return (int) (((float) (this.start - this.currentPosition) / (float) (this.start - this.finish)) * 100f);
+        } else {
+            return -1;
+        }
+    }
 
-	public long getIntervalSize(){
-		if(this.finish > this.start){
-			return this.finish - this.start;
-		}else if(this.finish < this.start){
-			return this.start - this.finish;
-		}else{
-			return 0;
-		}
-	}
+    public int getPercentRemaining() {
+        if (this.finish > this.start) {
+            if (this.finish - this.currentPosition != 0) {
+                return (int) (((float) (this.finish - this.currentPosition) / (float) (this.finish - this.start)) * 100f);
+            } else {
+                return 0;
+            }
+        } else if (this.finish < this.start) {
+            if (this.currentPosition - this.finish != 0) {
+                return (int) (((float) (this.currentPosition - this.finish) / (float) (this.start - this.finish)) * 100f);
+            } else {
+                return 0;
+            }
+        } else {
+            return -1;
+        }
+    }
 
-	public long getStartTime() {
-		return startTime;
-	}
+    public long getIntervalSize() {
+        if (this.finish > this.start) {
+            return this.finish - this.start;
+        } else if (this.finish < this.start) {
+            return this.start - this.finish;
+        } else {
+            return 0;
+        }
+    }
 
-	public void setStartTime() {
-		this.startTime = System.currentTimeMillis();
-	}
+    public long getStartTime() {
+        return startTime;
+    }
 
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
+    public void setStartTime() {
+        this.startTime = System.currentTimeMillis();
+    }
 
-	public long getEndTime() {
-		return endTime;
-	}
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
 
-	public void setEndTime() {
-		this.endTime = System.currentTimeMillis();
-	}
+    public long getEndTime() {
+        return endTime;
+    }
 
-	public void setEndTime(long endTime) {
-		this.endTime = endTime;
-	}
+    public void setEndTime() {
+        this.endTime = System.currentTimeMillis();
+    }
 
-	public long getTimeSpent(){
-		if(this.startTime != 0){
-			if(this.endTime == 0){
-				return System.currentTimeMillis() - this.startTime;
-			}else{
-				return this.endTime - this.startTime;
-			}
-		}else{
-			return 0;
-		}
-	}
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
 
-	public void incrementCurrentPosition(long value) {
+    public long getTimeSpent() {
+        if (this.startTime != 0) {
+            if (this.endTime == 0) {
+                return System.currentTimeMillis() - this.startTime;
+            } else {
+                return this.endTime - this.startTime;
+            }
+        } else {
+            return 0;
+        }
+    }
 
-		this.currentPosition += value;
-	}
+    public void incrementCurrentPosition(long value) {
 
-	public String getTimeSpentString() {
+        this.currentPosition += value;
+    }
 
-		return TimeUtils.millisecondsToString(getTimeSpent());
-	}
+    public String getTimeSpentString() {
+
+        return TimeUtils.millisecondsToString(getTimeSpent());
+    }
 }

@@ -10,9 +10,8 @@ package se.unlogic.standardutils.dao.querys;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public interface GeneratedKeyCollector {
 
-	void collect(ResultSet rs) throws SQLException;
+    void collect(ResultSet rs) throws SQLException;
 
 }

@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>org.jboss</groupId>
-        <artifactId>jboss-parent</artifactId>
-        <version>39</version>
+        <groupId>dev.resteasy.tools</groupId>
+        <artifactId>resteasy-parent</artifactId>
+        <version>2.0.3.Final</version>
         <relativePath/>
     </parent>
 
@@ -21,23 +21,15 @@
         <!-- print logs to file by default -->
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
         <!-- Dependency versions, please keep in alphabetical order -->
-        <version.jakarta.transaction.transaction-api>1.3.3</version.jakarta.transaction.transaction-api>
         <version.jakarta.ws.rs-api>3.1.0</version.jakarta.ws.rs-api>
-        <version.org.infinispan>12.1.1.Final</version.org.infinispan>
-        <version.org.jboss.logging.jboss-logging>3.4.1.Final</version.org.jboss.logging.jboss-logging>
+        <version.org.jboss.logging.jboss-logging>3.5.0.Final</version.org.jboss.logging.jboss-logging>
         <version.org.jboss.logging.jboss-logging-annotations>2.2.1.Final
         </version.org.jboss.logging.jboss-logging-annotations>
-        <version.org.jboss.resteasy>6.2.0.Final</version.org.jboss.resteasy>
-        <version.org.junit>5.7.0</version.org.junit>
-        <version.org.slf4j>1.7.30</version.org.slf4j>
-        <version.commons-io>2.11.0</version.commons-io>
-        <!-- Require at least Java 11 to compile -->
-        <jdk.min.version>11</jdk.min.version>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
+        <version.org.jboss.resteasy>6.2.3.Final</version.org.jboss.resteasy>
+        <version.org.junit>5.9.2</version.org.junit>
     </properties>
 
-    <url>https://resteasy.github.io/</url>
+    <url>https://resteasy.dev/</url>
 
     <licenses>
         <license>
@@ -60,8 +52,8 @@
     </scm>
 
     <issueManagement>
-        <system>JIRA</system>
-        <url>https://issues.redhat.com/browse/RESTEASY</url>
+        <system>GitHub</system>
+        <url>https://github.com/resteasy/resteasy-extensions/issues</url>
     </issueManagement>
 
     <modules>
@@ -70,33 +62,124 @@
         <module>cache</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- BOM Imports -->
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-bom</artifactId>
+                <version>${version.org.jboss.resteasy}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${version.org.junit}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Jakarta Dependencies -->
+            <dependency>
+                <groupId>jakarta.ws.rs</groupId>
+                <artifactId>jakarta.ws.rs-api</artifactId>
+                <version>${version.jakarta.ws.rs-api}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+                <version>${version.org.jboss.logging.jboss-logging}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging-annotations</artifactId>
+                <version>${version.org.jboss.logging.jboss-logging-annotations}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging-processor</artifactId>
+                <version>${version.org.jboss.logging.jboss-logging-annotations}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <excludePackageNames>
+                            com.restfully.*:org.jboss.resteasy.examples.*:se.unlogic.*:org.jboss.resteasy.tests.*
+                        </excludePackageNames>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>check-style</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Format source files -->
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>net.revelc.code</groupId>
+                <artifactId>impsort-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
-            <id>checkstyle</id>
-            <activation>
-                <property>
-                    <name>checkstyle</name>
-                </property>
-            </activation>
+            <id>format-check</id>
             <build>
                 <plugins>
+                    <!-- Validate formatting -->
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <configuration>
-                            <configLocation>checkstyle.xml</configLocation>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                            <excludes>**/*$logger.java,**/*$bundle.java</excludes>
-                            <useFile/>
-                        </configuration>
+                        <groupId>net.revelc.code.formatter</groupId>
+                        <artifactId>formatter-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>check-style</id>
-                                <phase>compile</phase>
+                                <id>validate-format</id>
+                                <phase>validate</phase>
                                 <goals>
-                                    <goal>checkstyle</goal>
+                                    <goal>validate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>net.revelc.code</groupId>
+                        <artifactId>impsort-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>check-import-sort</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>check</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -126,111 +209,4 @@
             <layout>default</layout>
         </repository>
     </repositories>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- BOM Imports -->
-            <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-bom</artifactId>
-                <version>${version.org.jboss.resteasy}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${version.org.junit}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- Jakarta Dependencies -->
-            <dependency>
-                <groupId>jakarta.transaction</groupId>
-                <artifactId>jakarta.transaction-api</artifactId>
-                <version>${version.jakarta.transaction.transaction-api}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-core</artifactId>
-                <version>${version.org.infinispan}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jboss.spec.javax.transaction</groupId>
-                        <artifactId>jboss-transaction-api_1.2_spec</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.enterprise</groupId>
-                        <artifactId>cdi-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.inject</groupId>
-                        <artifactId>javax.inject</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging</artifactId>
-                <version>${version.org.jboss.logging.jboss-logging}</version>
-                <!--<scope>provided</scope> todo this should be provided-->
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging-annotations</artifactId>
-                <version>${version.org.jboss.logging.jboss-logging-annotations}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging-processor</artifactId>
-                <version>${version.org.jboss.logging.jboss-logging-annotations}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
-
-            <dependency>
-                <groupId>jakarta.ws.rs</groupId>
-                <artifactId>jakarta.ws.rs-api</artifactId>
-                <version>${version.jakarta.ws.rs-api}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${version.org.slf4j}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${version.commons-io}</version>
-                <scope>test</scope>
-            </dependency>
-
-
-        </dependencies>
-    </dependencyManagement>
-
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <configuration>
-                        <excludePackageNames>
-                            com.restfully.*:org.jboss.resteasy.examples.*:se.unlogic.*:org.jboss.resteasy.tests.*
-                        </excludePackageNames>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

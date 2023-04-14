@@ -7,43 +7,44 @@
  ******************************************************************************/
 package se.unlogic.standardutils.populators;
 
-import se.unlogic.standardutils.dao.BeanResultSetPopulator;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CharacterPopulator extends BaseStringPopulator<Character> implements BeanResultSetPopulator<Character>, BeanStringPopulator<Character> {
+import se.unlogic.standardutils.dao.BeanResultSetPopulator;
 
-	public CharacterPopulator() {
+public class CharacterPopulator extends BaseStringPopulator<Character>
+        implements BeanResultSetPopulator<Character>, BeanStringPopulator<Character> {
 
-		super();
-	}
+    public CharacterPopulator() {
 
-	private static final CharacterPopulator POPULATOR = new CharacterPopulator();
+        super();
+    }
 
-	public Character populate(ResultSet rs) throws SQLException {
+    private static final CharacterPopulator POPULATOR = new CharacterPopulator();
 
-		return rs.getString(1).charAt(0);
-	}
+    public Character populate(ResultSet rs) throws SQLException {
 
-	public static CharacterPopulator getPopulator() {
+        return rs.getString(1).charAt(0);
+    }
 
-		return POPULATOR;
-	}
+    public static CharacterPopulator getPopulator() {
 
-	public Character getValue(String value) {
+        return POPULATOR;
+    }
 
-		return value.charAt(0);
-	}
+    public Character getValue(String value) {
 
-	@Override
-	public boolean validateDefaultFormat(String value) {
+        return value.charAt(0);
+    }
 
-		return true;
-	}
+    @Override
+    public boolean validateDefaultFormat(String value) {
 
-	public Class<? extends Character> getType() {
+        return true;
+    }
 
-		return Character.class;
-	}
+    public Class<? extends Character> getType() {
+
+        return Character.class;
+    }
 }

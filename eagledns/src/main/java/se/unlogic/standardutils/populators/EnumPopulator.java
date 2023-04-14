@@ -7,123 +7,124 @@
  ******************************************************************************/
 package se.unlogic.standardutils.populators;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import se.unlogic.standardutils.dao.BeanResultSetPopulator;
 import se.unlogic.standardutils.dao.querys.PreparedStatementQuery;
 import se.unlogic.standardutils.enums.EnumUtils;
 import se.unlogic.standardutils.reflection.ReflectionUtils;
 import se.unlogic.standardutils.string.StringUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+public class EnumPopulator<EnumType extends Enum<EnumType>> extends BaseStringPopulator<EnumType>
+        implements BeanResultSetPopulator<EnumType>, BeanStringPopulator<EnumType>, QueryParameterPopulator<EnumType> {
 
-public class EnumPopulator<EnumType extends Enum<EnumType>> extends BaseStringPopulator<EnumType> implements BeanResultSetPopulator<EnumType>, BeanStringPopulator<EnumType>, QueryParameterPopulator<EnumType> {
+    protected Class<EnumType> classType;
+    protected String fieldName;
 
-	protected Class<EnumType> classType;
-	protected String fieldName;
+    public EnumPopulator(Class<EnumType> classType) {
+        super();
 
-	public EnumPopulator(Class<EnumType> classType) {
-		super();
+        checkClass(classType);
+        fieldName = classType.getSimpleName();
+    }
 
-		checkClass(classType);
-		fieldName = classType.getSimpleName();
-	}
+    public EnumPopulator(Class<EnumType> classType, String fieldName) {
 
-	public EnumPopulator(Class<EnumType> classType, String fieldName) {
+        checkClass(classType);
 
-		checkClass(classType);
+        if (StringUtils.isEmpty(fieldName)) {
+            throw new NullPointerException("fieldName can not be null or empty!");
+        } else {
+            this.fieldName = fieldName;
+        }
+    }
 
-		if (StringUtils.isEmpty(fieldName)) {
-			throw new NullPointerException("fieldName can not be null or empty!");
-		} else {
-			this.fieldName = fieldName;
-		}
-	}
+    private void checkClass(Class<EnumType> classType) {
 
-	private void checkClass(Class<EnumType> classType) {
+        if (classType == null) {
+            throw new NullPointerException("Classtype can not be null!");
+        } else {
+            this.classType = classType;
+        }
+    }
 
-		if (classType == null) {
-			throw new NullPointerException("Classtype can not be null!");
-		} else {
-			this.classType = classType;
-		}
-	}
+    public EnumType populate(ResultSet rs) throws SQLException {
 
-	public EnumType populate(ResultSet rs) throws SQLException {
+        return EnumUtils.toEnum(classType, rs.getString(1));
+    }
 
-		return EnumUtils.toEnum(classType, rs.getString(1));
-	}
+    public EnumType getValue(String value) {
 
-	public EnumType getValue(String value) {
+        return EnumUtils.toEnum(classType, value);
+    }
 
-		return EnumUtils.toEnum(classType, value);
-	}
+    @Override
+    public boolean validateDefaultFormat(String value) {
 
-	@Override
-	public boolean validateDefaultFormat(String value) {
+        return EnumUtils.isEnum(classType, value);
+    }
 
-		return EnumUtils.isEnum(classType, value);
-	}
+    public Class<? extends EnumType> getType() {
 
-	public Class<? extends EnumType> getType() {
+        return classType;
+    }
 
-		return classType;
-	}
+    public void populate(PreparedStatementQuery query, int paramIndex, Object bean) throws SQLException {
 
-	public void populate(PreparedStatementQuery query, int paramIndex, Object bean) throws SQLException {
+        if (bean != null) {
 
-		if(bean != null){
-			
-			query.setString(paramIndex, bean.toString());
-			
-		}else{
-			
-			query.setString(paramIndex, null);
-		}
-		
-	}
+            query.setString(paramIndex, bean.toString());
 
-	public static <Type extends Enum<Type>> EnumPopulator<Type> getGenericInstance(Class<Type> type) {
+        } else {
 
-		return new EnumPopulator<Type>(type);
-	}
+            query.setString(paramIndex, null);
+        }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static EnumPopulator<?> getInstanceFromField(Field field){
+    }
 
-		Enum enumInstance = EnumUtils.getInstanceFromField(field);
+    public static <Type extends Enum<Type>> EnumPopulator<Type> getGenericInstance(Class<Type> type) {
 
-		return EnumPopulator.getGenericInstance(enumInstance.getClass());
-	}
+        return new EnumPopulator<Type>(type);
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static EnumPopulator<?> getInstanceFromListField(Field field){
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static EnumPopulator<?> getInstanceFromField(Field field) {
 
-		Object[] enumValues = ((Class<?>)ReflectionUtils.getGenericType(field)).getEnumConstants();
+        Enum enumInstance = EnumUtils.getInstanceFromField(field);
 
-		Enum enumInstance = (Enum) enumValues[0];
+        return EnumPopulator.getGenericInstance(enumInstance.getClass());
+    }
 
-		return EnumPopulator.getGenericInstance(enumInstance.getClass());
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static EnumPopulator<?> getInstanceFromMethod(Method method){
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static EnumPopulator<?> getInstanceFromListField(Field field) {
 
-		Object[] enumValues = method.getParameterTypes()[0].getEnumConstants();
+        Object[] enumValues = ((Class<?>) ReflectionUtils.getGenericType(field)).getEnumConstants();
 
-		Enum enumInstance = (Enum) enumValues[0];
+        Enum enumInstance = (Enum) enumValues[0];
 
-		return EnumPopulator.getGenericInstance(enumInstance.getClass());
-	}
+        return EnumPopulator.getGenericInstance(enumInstance.getClass());
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static BeanStringPopulator<?> getInstanceFromListMethod(Method method) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static EnumPopulator<?> getInstanceFromMethod(Method method) {
 
-		Object[] enumValues = ((Class<?>)ReflectionUtils.getGenericType(method)).getEnumConstants();
+        Object[] enumValues = method.getParameterTypes()[0].getEnumConstants();
 
-		Enum enumInstance = (Enum) enumValues[0];
+        Enum enumInstance = (Enum) enumValues[0];
 
-		return EnumPopulator.getGenericInstance(enumInstance.getClass());
-	}
+        return EnumPopulator.getGenericInstance(enumInstance.getClass());
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static BeanStringPopulator<?> getInstanceFromListMethod(Method method) {
+
+        Object[] enumValues = ((Class<?>) ReflectionUtils.getGenericType(method)).getEnumConstants();
+
+        Enum enumInstance = (Enum) enumValues[0];
+
+        return EnumPopulator.getGenericInstance(enumInstance.getClass());
+    }
 }

@@ -7,108 +7,113 @@
  ******************************************************************************/
 package se.unlogic.standardutils.dao;
 
+import java.util.HashMap;
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import se.unlogic.standardutils.populators.BeanStringPopulator;
 import se.unlogic.standardutils.populators.QueryParameterPopulator;
 import se.unlogic.standardutils.populators.annotated.AnnotatedResultSetPopulator;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
+public class SimpleAnnotatedDAOFactory implements AnnotatedDAOFactory {
 
+    private final DataSource dataSource;
+    private final HashMap<Class<?>, AnnotatedDAO<?>> daoMap = new HashMap<Class<?>, AnnotatedDAO<?>>();
 
-public class SimpleAnnotatedDAOFactory implements AnnotatedDAOFactory{
+    public SimpleAnnotatedDAOFactory(DataSource dataSource) {
 
-	private final DataSource dataSource;
-	private final HashMap<Class<?>, AnnotatedDAO<?>> daoMap = new HashMap<Class<?>, AnnotatedDAO<?>>();
+        super();
+        this.dataSource = dataSource;
+    }
 
-	public SimpleAnnotatedDAOFactory(DataSource dataSource) {
+    public SimpleAnnotatedDAOFactory() {
 
-		super();
-		this.dataSource = dataSource;
-	}
+        super();
+        this.dataSource = null;
+    }
 
-	public SimpleAnnotatedDAOFactory() {
+    @SuppressWarnings("unchecked")
+    public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass) {
 
-		super();
-		this.dataSource = null;
-	}
+        AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
 
-	@SuppressWarnings("unchecked")
-	public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass) {
+        if (dao == null) {
 
-		AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
+            dao = new AnnotatedDAO<T>(dataSource, beanClass, this);
+            this.daoMap.put(beanClass, dao);
+        }
 
-		if(dao == null){
+        return dao;
+    }
 
-			dao = new AnnotatedDAO<T>(dataSource, beanClass, this);
-			this.daoMap.put(beanClass, dao);
-		}
+    @SuppressWarnings("unchecked")
+    public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass, AnnotatedResultSetPopulator<T> populator) {
 
-		return dao;
-	}
+        AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
 
-	@SuppressWarnings("unchecked")
-	public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass, AnnotatedResultSetPopulator<T> populator) {
+        if (dao == null) {
 
-		AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
+            dao = new AnnotatedDAO<T>(dataSource, beanClass, this, populator, null, null);
+            this.daoMap.put(beanClass, dao);
+        }
 
-		if(dao == null){
+        return dao;
+    }
 
-			dao = new AnnotatedDAO<T>(dataSource, beanClass, this, populator, null, null);
-			this.daoMap.put(beanClass, dao);
-		}
+    @SuppressWarnings("unchecked")
+    public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass, AnnotatedResultSetPopulator<T> populator,
+            QueryParameterPopulator<?>... queryParameterPopulators) {
 
-		return dao;
-	}
+        AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
 
-	@SuppressWarnings("unchecked")
-	public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass, AnnotatedResultSetPopulator<T> populator, QueryParameterPopulator<?>... queryParameterPopulators) {
+        if (dao == null) {
 
-		AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
+            dao = new AnnotatedDAO<T>(dataSource, beanClass, this, populator, queryParameterPopulators);
+            this.daoMap.put(beanClass, dao);
+        }
 
-		if(dao == null){
+        return dao;
+    }
 
-			dao = new AnnotatedDAO<T>(dataSource, beanClass, this, populator, queryParameterPopulators);
-			this.daoMap.put(beanClass, dao);
-		}
+    @SuppressWarnings("unchecked")
+    public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass,
+            List<? extends QueryParameterPopulator<?>> queryParameterPopulators,
+            List<? extends BeanStringPopulator<?>> typePopulators) {
 
-		return dao;
-	}
+        AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
 
-	@SuppressWarnings("unchecked")
-	public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass, List<? extends QueryParameterPopulator<?>> queryParameterPopulators, List<? extends BeanStringPopulator<?>> typePopulators) {
+        if (dao == null) {
 
-		AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
+            dao = new AnnotatedDAO<T>(dataSource, beanClass, this, queryParameterPopulators, typePopulators);
+            this.daoMap.put(beanClass, dao);
+        }
 
-		if(dao == null){
+        return dao;
+    }
 
-			dao = new AnnotatedDAO<T>(dataSource, beanClass, this, queryParameterPopulators, typePopulators);
-			this.daoMap.put(beanClass, dao);
-		}
+    @SuppressWarnings("unchecked")
+    public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass, AnnotatedResultSetPopulator<T> populator,
+            List<? extends QueryParameterPopulator<?>> queryParameterPopulators,
+            List<? extends BeanStringPopulator<?>> typePopulators) {
 
-		return dao;
-	}	
-	
-	@SuppressWarnings("unchecked")
-	public synchronized <T> AnnotatedDAO<T> getDAO(Class<T> beanClass, AnnotatedResultSetPopulator<T> populator, List<? extends QueryParameterPopulator<?>> queryParameterPopulators, List<? extends BeanStringPopulator<?>> typePopulators) {
+        AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
 
-		AnnotatedDAO<T> dao = (AnnotatedDAO<T>) this.daoMap.get(beanClass);
+        if (dao == null) {
 
-		if(dao == null){
+            dao = new AnnotatedDAO<T>(dataSource, beanClass, this, populator, queryParameterPopulators, typePopulators);
+            this.daoMap.put(beanClass, dao);
+        }
 
-			dao = new AnnotatedDAO<T>(dataSource, beanClass, this, populator, queryParameterPopulators, typePopulators);
-			this.daoMap.put(beanClass, dao);
-		}
+        return dao;
+    }
 
-		return dao;
-	}
+    public DataSource getDataSource() {
 
-	public DataSource getDataSource() {
+        return dataSource;
+    }
 
-		return dataSource;
-	}
-
-	public void addDAO(Class<?> beanClass, AnnotatedDAO<?> daoInstance) {
-		daoMap.put(beanClass, daoInstance);
-	}
+    public void addDAO(Class<?> beanClass, AnnotatedDAO<?> daoInstance) {
+        daoMap.put(beanClass, daoInstance);
+    }
 }

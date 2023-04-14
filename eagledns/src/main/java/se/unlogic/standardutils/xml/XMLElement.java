@@ -7,22 +7,26 @@
  ******************************************************************************/
 package se.unlogic.standardutils.xml;
 
-import se.unlogic.standardutils.string.DummyStringyfier;
-import se.unlogic.standardutils.string.Stringyfier;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import se.unlogic.standardutils.string.DummyStringyfier;
+import se.unlogic.standardutils.string.Stringyfier;
+
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD,ElementType.TYPE})
+@Target({ ElementType.FIELD, ElementType.TYPE })
 public @interface XMLElement {
-	String name() default "";
-	boolean cdata() default false;
-	boolean skipChildParentElement() default false;
-	String childName() default "";
-	Class<? extends Stringyfier> valueFormatter() default DummyStringyfier.class;
+    String name() default "";
+
+    boolean cdata() default false;
+
+    boolean skipChildParentElement() default false;
+
+    String childName() default "";
+
+    Class<? extends Stringyfier> valueFormatter() default DummyStringyfier.class;
 }

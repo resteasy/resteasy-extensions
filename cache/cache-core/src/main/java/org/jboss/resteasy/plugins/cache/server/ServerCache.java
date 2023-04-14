@@ -18,6 +18,7 @@ package org.jboss.resteasy.plugins.cache.server;
 
 import java.util.List;
 import java.util.Map;
+
 import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -51,7 +52,7 @@ public interface ServerCache {
     }
 
     Entry add(String uri, MediaType mediaType, CacheControl cc, MultivaluedMap<String, Object> headers, byte[] entity,
-              String etag, MultivaluedMap<String, String> varyHeaders);
+            String etag, MultivaluedMap<String, String> varyHeaders);
 
     Entry get(String uri, MediaType accept, MultivaluedMap<String, String> headers);
 
