@@ -15,8 +15,9 @@ import java.lang.annotation.Target;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD,ElementType.METHOD})
+@Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface RequiredIfSet {
-	String paramName();
-	String value() default "";
+    String paramName();
+
+    String value() default "";
 }

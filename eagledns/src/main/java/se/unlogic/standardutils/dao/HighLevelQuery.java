@@ -12,106 +12,106 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 /**
- * This class represents a SQL query and is used together with a AnnotatedDAO typed with a matching type.<p>
- * 
- * A high level abstracts away all and also verifies that the query parameters and order by criterias are of the correct type to avoid SQL exceptions.<p>
+ * This class represents a SQL query and is used together with a AnnotatedDAO typed with a matching type.
+ * <p>
+ *
+ * A high level abstracts away all and also verifies that the query parameters and order by criterias are of the correct type to
+ * avoid SQL exceptions.
+ * <p>
  *
  * @param <T> The type of bean this query is supposed to return
- * 
+ *
  * @author Robert "Unlogic" Olofsson (unlogic@unlogic.se)
  */
-public class HighLevelQuery<T> extends RelationQuery{
+public class HighLevelQuery<T> extends RelationQuery {
 
-	private List<QueryParameter<T,?>> parameters;
-	private List<OrderByCriteria<T>> orderByCriterias;
+    private List<QueryParameter<T, ?>> parameters;
+    private List<OrderByCriteria<T>> orderByCriterias;
 
-	public HighLevelQuery() {}
+    public HighLevelQuery() {
+    }
 
-	public HighLevelQuery(List<QueryParameter<T, ?>> parameters, List<OrderByCriteria<T>> orderByCriterias) {
+    public HighLevelQuery(List<QueryParameter<T, ?>> parameters, List<OrderByCriteria<T>> orderByCriterias) {
 
-		super();
-		this.parameters = parameters;
-		this.orderByCriterias = orderByCriterias;
-	}
+        super();
+        this.parameters = parameters;
+        this.orderByCriterias = orderByCriterias;
+    }
 
-	public HighLevelQuery(Field... relations) {
+    public HighLevelQuery(Field... relations) {
 
-		this.addRelations(relations);
-	}
+        this.addRelations(relations);
+    }
 
-	public HighLevelQuery(QueryParameter<T, ?> parameter, Field... relations) {
+    public HighLevelQuery(QueryParameter<T, ?> parameter, Field... relations) {
 
-		this.addParameter(parameter);
-		this.addRelations(relations);
-	}
+        this.addParameter(parameter);
+        this.addRelations(relations);
+    }
 
-	public HighLevelQuery(QueryParameter<T, ?>... queryParameters) {
+    public HighLevelQuery(QueryParameter<T, ?>... queryParameters) {
 
-		this.addParameter(queryParameters);
-	}
+        this.addParameter(queryParameters);
+    }
 
-	public void setParameters(List<QueryParameter<T,?>> parameters) {
+    public void setParameters(List<QueryParameter<T, ?>> parameters) {
 
-		this.parameters = parameters;
-	}
+        this.parameters = parameters;
+    }
 
-	public synchronized void addParameter(QueryParameter<T,?> parameter){
+    public synchronized void addParameter(QueryParameter<T, ?> parameter) {
 
-		if(this.parameters == null){
+        if (this.parameters == null) {
 
-			this.parameters = new ArrayList<QueryParameter<T,?>>();
-		}
+            this.parameters = new ArrayList<QueryParameter<T, ?>>();
+        }
 
-		this.parameters.add(parameter);
-	}
+        this.parameters.add(parameter);
+    }
 
-	public synchronized void addParameter(QueryParameter<T,?>... parameters){
+    public synchronized void addParameter(QueryParameter<T, ?>... parameters) {
 
-		if(this.parameters == null){
+        if (this.parameters == null) {
 
-			this.parameters = new ArrayList<QueryParameter<T,?>>();
-		}
+            this.parameters = new ArrayList<QueryParameter<T, ?>>();
+        }
 
-		this.parameters.addAll(Arrays.asList(parameters));
-	}
+        this.parameters.addAll(Arrays.asList(parameters));
+    }
 
+    public List<OrderByCriteria<T>> getOrderByCriterias() {
 
-	public List<OrderByCriteria<T>> getOrderByCriterias() {
+        return orderByCriterias;
+    }
 
-		return orderByCriterias;
-	}
+    public void setOrderByCriterias(List<OrderByCriteria<T>> orderByCriterias) {
 
+        this.orderByCriterias = orderByCriterias;
+    }
 
-	public void setOrderByCriterias(List<OrderByCriteria<T>> orderByCriterias) {
+    public List<QueryParameter<T, ?>> getParameters() {
 
-		this.orderByCriterias = orderByCriterias;
-	}
+        return parameters;
+    }
 
+    public synchronized void addOrderByCriteria(OrderByCriteria<T> criteria) {
 
-	public List<QueryParameter<T, ?>> getParameters() {
+        if (this.orderByCriterias == null) {
 
-		return parameters;
-	}
+            this.orderByCriterias = new ArrayList<OrderByCriteria<T>>();
+        }
 
-	public synchronized void addOrderByCriteria(OrderByCriteria<T> criteria){
+        this.orderByCriterias.add(criteria);
+    }
 
-		if(this.orderByCriterias == null){
+    public synchronized void addOrderByCriteria(OrderByCriteria<T>... criterias) {
 
-			this.orderByCriterias = new ArrayList<OrderByCriteria<T>>();
-		}
+        if (this.orderByCriterias == null) {
 
-		this.orderByCriterias.add(criteria);
-	}
+            this.orderByCriterias = new ArrayList<OrderByCriteria<T>>();
+        }
 
-	public synchronized void addOrderByCriteria(OrderByCriteria<T>... criterias){
-
-		if(this.orderByCriterias == null){
-
-			this.orderByCriterias = new ArrayList<OrderByCriteria<T>>();
-		}
-
-		this.orderByCriterias.addAll(Arrays.asList(criterias));
-	}
+        this.orderByCriterias.addAll(Arrays.asList(criterias));
+    }
 }

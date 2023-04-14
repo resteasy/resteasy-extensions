@@ -7,14 +7,13 @@
  ******************************************************************************/
 package se.unlogic.standardutils.populators;
 
-import se.unlogic.standardutils.dao.querys.PreparedStatementQuery;
-
 import java.sql.SQLException;
 
+import se.unlogic.standardutils.dao.querys.PreparedStatementQuery;
 
 public interface QueryParameterPopulator<T> {
 
-	Class<? extends T> getType();
+    Class<? extends T> getType();
 
-	void populate(PreparedStatementQuery query, int paramIndex, Object bean) throws SQLException;
+    void populate(PreparedStatementQuery query, int paramIndex, Object bean) throws SQLException;
 }

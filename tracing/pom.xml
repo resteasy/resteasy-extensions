@@ -10,24 +10,4 @@
     <name>RESTEasy Tracing API</name>
     <description />
     <packaging>jar</packaging>
-
-    <properties>
-    </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.logging</groupId>
-            <artifactId>jboss-logging-processor</artifactId>
-        </dependency>
-
-    </dependencies>
-
 </project>

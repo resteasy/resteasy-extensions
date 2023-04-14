@@ -15,16 +15,17 @@ import java.lang.annotation.Target;
 import java.util.List;
 
 /**
- * This annotation is together with the {@link WebPopulate} annotation to indicate that the request parameters of a field should be split on line break.
- * 
+ * This annotation is together with the {@link WebPopulate} annotation to indicate that the request parameters of a field should
+ * be split on line break.
+ *
  * It should be noted that this is only supported for fields of the type {@link List}.
- * 
+ *
  * @author Robert "Unlogic" Olofsson (unlogic@unlogic.se)
  *
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD,ElementType.METHOD})
+@Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface NoDuplicates {
 
 }

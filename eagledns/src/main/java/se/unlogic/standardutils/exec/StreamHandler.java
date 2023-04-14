@@ -10,21 +10,22 @@ package se.unlogic.standardutils.exec;
 import java.io.InputStream;
 
 /**
- * Abstract class for handling output from {@link InputStream}'s.<p>
- * 
+ * Abstract class for handling output from {@link InputStream}'s.
+ * <p>
+ *
  * @author Robert "Unlogic" Olofsson (unlogic@unlogic.se)
  *
  */
-public interface StreamHandler{
+public interface StreamHandler {
 
-	void handleStream(InputStream inputStream);
-	
-	boolean isFinished();
-	
-	void awaitFinish();
+    void handleStream(InputStream inputStream);
 
-	boolean isTerminated();
+    boolean isFinished();
 
-	void terminate();
+    void awaitFinish();
+
+    boolean isTerminated();
+
+    void terminate();
 
 }

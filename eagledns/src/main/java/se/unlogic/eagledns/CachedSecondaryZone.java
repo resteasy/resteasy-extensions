@@ -8,111 +8,117 @@ import org.jboss.logging.Logger;
 import org.xbill.DNS.DClass;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Zone;
-import org.xbill.DNS.ZoneTransferException;
 import org.xbill.DNS.ZoneTransferIn;
-
 
 public class CachedSecondaryZone {
 
-	private Logger log = Logger.getLogger(this.getClass());
-	protected ZoneProvider zoneProvider;
-	private SecondaryZone secondaryZone;
+    private Logger log = Logger.getLogger(this.getClass());
+    protected ZoneProvider zoneProvider;
+    private SecondaryZone secondaryZone;
 
-	public CachedSecondaryZone(ZoneProvider zoneProvider, SecondaryZone secondaryZone) {
+    public CachedSecondaryZone(ZoneProvider zoneProvider, SecondaryZone secondaryZone) {
 
-		this.zoneProvider = zoneProvider;
-		this.secondaryZone = secondaryZone;
-		//this.update();
+        this.zoneProvider = zoneProvider;
+        this.secondaryZone = secondaryZone;
+        //this.update();
 
-		if(this.secondaryZone.getZoneCopy() != null){
+        if (this.secondaryZone.getZoneCopy() != null) {
 
-			log.info("Using stored zone data for sedondary zone " + this.secondaryZone.getZoneName());
-		}
-	}
+            log.info("Using stored zone data for sedondary zone " + this.secondaryZone.getZoneName());
+        }
+    }
 
+    public SecondaryZone getSecondaryZone() {
 
-	public SecondaryZone getSecondaryZone() {
+        return secondaryZone;
+    }
 
-		return secondaryZone;
-	}
+    public void setSecondaryZone(SecondaryZone secondaryZone) {
 
+        this.secondaryZone = secondaryZone;
+    }
 
-	public void setSecondaryZone(SecondaryZone secondaryZone) {
+    /**
+     * Updates this secondary zone from the primary zone
+     *
+     * @param axfrTimeout
+     */
+    public void update(int axfrTimeout) {
 
-		this.secondaryZone = secondaryZone;
-	}
+        try {
+            ZoneTransferIn xfrin = ZoneTransferIn.newAXFR(this.secondaryZone.getZoneName(),
+                    this.secondaryZone.getRemoteServerAddress(), null);
+            xfrin.setDClass(DClass.value(this.secondaryZone.getDclass()));
+            xfrin.setTimeout(axfrTimeout);
 
-	/**
-	 * Updates this secondary zone from the primary zone
-	 * @param axfrTimeout
-	 */
-	public void update(int axfrTimeout) {
+            List<Record> records = xfrin.getAXFR();
 
+            if (!xfrin.isAXFR()) {
 
-		try {
-			ZoneTransferIn xfrin = ZoneTransferIn.newAXFR(this.secondaryZone.getZoneName(), this.secondaryZone.getRemoteServerAddress(), null);
-			xfrin.setDClass(DClass.value(this.secondaryZone.getDclass()));
-			xfrin.setTimeout(axfrTimeout);
+                log.warn("Unable to transfer zone " + this.secondaryZone.getZoneName() + " from server "
+                        + this.secondaryZone.getRemoteServerAddress() + ", response is not a valid AXFR!");
 
-			List<Record> records = xfrin.getAXFR();
+                return;
+            }
 
-			if (!xfrin.isAXFR()) {
+            Zone axfrZone = new Zone(this.secondaryZone.getZoneName(), records.toArray(new Record[records.size()]));
 
-				log.warn("Unable to transfer zone " + this.secondaryZone.getZoneName() + " from server " + this.secondaryZone.getRemoteServerAddress() + ", response is not a valid AXFR!");
+            log.debug("Zone " + this.secondaryZone.getZoneName() + " successfully transfered from server "
+                    + this.secondaryZone.getRemoteServerAddress());
 
-				return;
-			}
+            if (!axfrZone.getSOA().getName().equals(this.secondaryZone.getZoneName())) {
 
-			Zone axfrZone = new Zone(this.secondaryZone.getZoneName(),records.toArray(new Record[records.size()]));
+                log.warn("Invalid AXFR zone name in response when updating secondary zone " + this.secondaryZone.getZoneName()
+                        + ". Got zone name " + axfrZone.getSOA().getName() + " in respons.");
+            }
 
-			log.debug("Zone " + this.secondaryZone.getZoneName() + " successfully transfered from server " + this.secondaryZone.getRemoteServerAddress());
+            if (this.secondaryZone.getZoneCopy() == null
+                    || this.secondaryZone.getZoneCopy().getSOA().getSerial() != axfrZone.getSOA().getSerial()) {
 
-			if(!axfrZone.getSOA().getName().equals(this.secondaryZone.getZoneName())){
+                this.secondaryZone.setZoneCopy(axfrZone);
+                this.secondaryZone.setDownloaded(new Timestamp(System.currentTimeMillis()));
+                this.zoneProvider.zoneUpdated(this.secondaryZone);
 
-				log.warn("Invalid AXFR zone name in response when updating secondary zone " + this.secondaryZone.getZoneName() + ". Got zone name " + axfrZone.getSOA().getName() + " in respons.");
-			}
+                log.info("Zone " + this.secondaryZone.getZoneName() + " successfully updated from server "
+                        + this.secondaryZone.getRemoteServerAddress());
+            } else {
 
-			if(this.secondaryZone.getZoneCopy() == null || this.secondaryZone.getZoneCopy().getSOA().getSerial() != axfrZone.getSOA().getSerial()){
+                log.info("Zone " + this.secondaryZone.getZoneName() + " is already up to date with serial "
+                        + axfrZone.getSOA().getSerial());
+                this.zoneProvider.zoneChecked(secondaryZone);
+            }
 
-				this.secondaryZone.setZoneCopy(axfrZone);
-				this.secondaryZone.setDownloaded(new Timestamp(System.currentTimeMillis()));
-				this.zoneProvider.zoneUpdated(this.secondaryZone);
+        } catch (IOException e) {
 
-				log.info("Zone " + this.secondaryZone.getZoneName() + " successfully updated from server " + this.secondaryZone.getRemoteServerAddress());
-			}else{
+            log.warn("Unable to transfer zone " + this.secondaryZone.getZoneName() + " from server "
+                    + this.secondaryZone.getRemoteServerAddress() + ", " + e);
 
-				log.info("Zone " + this.secondaryZone.getZoneName() + " is already up to date with serial " + axfrZone.getSOA().getSerial());
-				this.zoneProvider.zoneChecked(secondaryZone);
-			}
+            checkExpired();
 
-		} catch (IOException e) {
+        } catch (RuntimeException e) {
 
-			log.warn("Unable to transfer zone " + this.secondaryZone.getZoneName() + " from server " + this.secondaryZone.getRemoteServerAddress() + ", " + e);
+            log.warn("Unable to transfer zone " + this.secondaryZone.getZoneName() + " from server "
+                    + this.secondaryZone.getRemoteServerAddress() + ", " + e);
 
-			checkExpired();
+            checkExpired();
 
-		}catch (RuntimeException e) {
+        } finally {
 
-			log.warn("Unable to transfer zone " + this.secondaryZone.getZoneName() + " from server " + this.secondaryZone.getRemoteServerAddress() + ", " + e);
+            this.secondaryZone.setDownloaded(new Timestamp(System.currentTimeMillis()));
+        }
+    }
 
-			checkExpired();
+    private void checkExpired() {
 
-		}finally{
+        if (this.secondaryZone.getZoneCopy() != null && (System.currentTimeMillis()
+                - this.secondaryZone.getDownloaded().getTime()) > (this.secondaryZone.getZoneCopy().getSOA().getExpire()
+                        * 1000)) {
 
-			this.secondaryZone.setDownloaded(new Timestamp(System.currentTimeMillis()));
-		}
-	}
+            log.warn("AXFR copy of secondary zone " + secondaryZone.getZoneName() + " has expired, deleting zone data...");
 
-
-	private void checkExpired() {
-
-		if(this.secondaryZone.getZoneCopy() != null && (System.currentTimeMillis() - this.secondaryZone.getDownloaded().getTime()) > (this.secondaryZone.getZoneCopy().getSOA().getExpire() * 1000)){
-
-			log.warn("AXFR copy of secondary zone " + secondaryZone.getZoneName() + " has expired, deleting zone data...");
-
-			this.secondaryZone.setZoneCopy(null);
-			this.secondaryZone.setDownloaded(null);
-			this.zoneProvider.zoneUpdated(this.secondaryZone);
-		}
-	}
+            this.secondaryZone.setZoneCopy(null);
+            this.secondaryZone.setDownloaded(null);
+            this.zoneProvider.zoneUpdated(this.secondaryZone);
+        }
+    }
 }

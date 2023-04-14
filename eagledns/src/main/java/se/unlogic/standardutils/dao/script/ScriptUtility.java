@@ -6,10 +6,11 @@
  * http://www.gnu.org/licenses/lgpl-3.0-standalone.html
  ******************************************************************************/
 package se.unlogic.standardutils.dao.script;
+
 import java.util.List;
 
 public interface ScriptUtility {
 
-	List<String> getStatements(String script);
-	
+    List<String> getStatements(String script);
+
 }

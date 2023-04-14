@@ -1,7 +1,6 @@
 package se.unlogic.standardutils.callback;
 
-
 public interface Callback<T> {
 
-	void callback(T type);
+    void callback(T type);
 }

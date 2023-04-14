@@ -11,16 +11,16 @@ import java.io.Serializable;
 
 /**
  * Abstraction interface for all JSON components
- * 
+ *
  * Equalizes the "component" of the "composite pattern" design pattern.
- * 
+ *
  * @author sikstromj
  *
  */
 public interface JsonNode extends Serializable {
 
-	String toJson();
-	
-	String toJson(StringBuilder stringBuilder);
-	
+    String toJson();
+
+    String toJson(StringBuilder stringBuilder);
+
 }

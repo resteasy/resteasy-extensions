@@ -7,11 +7,10 @@
  ******************************************************************************/
 package se.unlogic.standardutils.threads;
 
-
 public interface ThreadPoolListener {
 
-	void beforeExecute(Thread t, Runnable r);
+    void beforeExecute(Thread t, Runnable r);
 
-	void afterExecute(Throwable t, Runnable r);
+    void afterExecute(Throwable t, Runnable r);
 
 }

@@ -7,11 +7,10 @@
  ******************************************************************************/
 package se.unlogic.standardutils.validation;
 
-
 public class DummyStringFormatValidator implements StringFormatValidator {
 
-	public boolean validateFormat(String value) {
+    public boolean validateFormat(String value) {
 
-		return true;
-	}
+        return true;
+    }
 }

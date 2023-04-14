@@ -7,16 +7,6 @@
  ******************************************************************************/
 package se.unlogic.standardutils.xml;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import se.unlogic.standardutils.string.StringUtils;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -25,108 +15,127 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import se.unlogic.standardutils.string.StringUtils;
+
 /**
- * This class is used to read the values of xsl:variable tags in XSL stylesheets. It recursively parses through all xsl:includes and xsl:imports and also
+ * This class is used to read the values of xsl:variable tags in XSL stylesheets. It recursively parses through all xsl:includes
+ * and xsl:imports and also
  * handles 'classpath://' style URI's.
- * 
+ *
  * @author Robert "Unlogic" Olofsson
- * 
+ *
  */
 public class XSLVariableReader {
 
-	private final Document doc;
-	private final List<Document> subDocuments;
+    private final Document doc;
+    private final List<Document> subDocuments;
 
-	private final XPath xpath = XPathFactory.newInstance().newXPath();;
+    private final XPath xpath = XPathFactory.newInstance().newXPath();;
 
-	public XSLVariableReader(Document doc) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException, URISyntaxException {
+    public XSLVariableReader(Document doc)
+            throws SAXException, IOException, ParserConfigurationException, XPathExpressionException, URISyntaxException {
 
-		this.doc = doc;
-		subDocuments = this.getSubDocuments(doc, null);
-	}
+        this.doc = doc;
+        subDocuments = this.getSubDocuments(doc, null);
+    }
 
-	public XSLVariableReader(URI uri) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException, URISyntaxException {
+    public XSLVariableReader(URI uri)
+            throws SAXException, IOException, ParserConfigurationException, XPathExpressionException, URISyntaxException {
 
-		this.doc = XMLUtils.parseXmlFile(uri, false);
-		subDocuments = this.getSubDocuments(doc, null);
-	}
+        this.doc = XMLUtils.parseXmlFile(uri, false);
+        subDocuments = this.getSubDocuments(doc, null);
+    }
 
-	public XSLVariableReader(String filePath) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException, URISyntaxException {
+    public XSLVariableReader(String filePath)
+            throws SAXException, IOException, ParserConfigurationException, XPathExpressionException, URISyntaxException {
 
-		this.doc = XMLUtils.parseXmlFile(filePath, false, false);
-		subDocuments = this.getSubDocuments(doc, null);
-	}
+        this.doc = XMLUtils.parseXmlFile(filePath, false, false);
+        subDocuments = this.getSubDocuments(doc, null);
+    }
 
-	public XSLVariableReader(File file) throws SAXException, IOException, ParserConfigurationException, XPathExpressionException, URISyntaxException {
+    public XSLVariableReader(File file)
+            throws SAXException, IOException, ParserConfigurationException, XPathExpressionException, URISyntaxException {
 
-		this.doc = XMLUtils.parseXmlFile(file, false);
-		subDocuments = this.getSubDocuments(doc, null);
-	}
+        this.doc = XMLUtils.parseXmlFile(file, false);
+        subDocuments = this.getSubDocuments(doc, null);
+    }
 
-	protected List<Document> getSubDocuments(Document doc, List<Document> subDocuments) throws SAXException, IOException, ParserConfigurationException, URISyntaxException, XPathExpressionException {
+    protected List<Document> getSubDocuments(Document doc, List<Document> subDocuments)
+            throws SAXException, IOException, ParserConfigurationException, URISyntaxException, XPathExpressionException {
 
-		URI uri = new URI(doc.getBaseURI());
+        URI uri = new URI(doc.getBaseURI());
 
-		NodeList nodeList = (NodeList) xpath.evaluate("//import/@href | //include/@href", doc, XPathConstants.NODESET);
+        NodeList nodeList = (NodeList) xpath.evaluate("//import/@href | //include/@href", doc, XPathConstants.NODESET);
 
-		if (nodeList.getLength() > 0) {
+        if (nodeList.getLength() > 0) {
 
-			int index = 0;
+            int index = 0;
 
-			while (index < nodeList.getLength()) {
+            while (index < nodeList.getLength()) {
 
-				URI subURI = new URI(nodeList.item(index).getTextContent());
-				
-				if (!subURI.isAbsolute()) {
+                URI subURI = new URI(nodeList.item(index).getTextContent());
 
-					subURI = new URL(uri.toURL(),nodeList.item(index).getTextContent()).toURI();
-				}
+                if (!subURI.isAbsolute()) {
 
-				if (subURI.toString().startsWith(ClassPathURIResolver.PREFIX) && subURI.toString().length() > ClassPathURIResolver.PREFIX.length()) {
+                    subURI = new URL(uri.toURL(), nodeList.item(index).getTextContent()).toURI();
+                }
 
-					subURI = ClassPathURIResolver.getURL(subURI.toString()).toURI();
-				}
+                if (subURI.toString().startsWith(ClassPathURIResolver.PREFIX)
+                        && subURI.toString().length() > ClassPathURIResolver.PREFIX.length()) {
 
-				Document subDoc = XMLUtils.parseXmlFile(subURI, false);
+                    subURI = ClassPathURIResolver.getURL(subURI.toString()).toURI();
+                }
 
-				if (subDocuments == null) {
+                Document subDoc = XMLUtils.parseXmlFile(subURI, false);
 
-					subDocuments = new ArrayList<Document>();
-				}
+                if (subDocuments == null) {
 
-				subDocuments.add(subDoc);
+                    subDocuments = new ArrayList<Document>();
+                }
 
-				this.getSubDocuments(subDoc, subDocuments);
+                subDocuments.add(subDoc);
 
-				index++;
-			}
-		}
+                this.getSubDocuments(subDoc, subDocuments);
 
-		return subDocuments;
-	}
+                index++;
+            }
+        }
 
-	public String getValue(String name) {
+        return subDocuments;
+    }
 
-		try {
-			String response = this.xpath.evaluate("//variable[@name='" + name + "']/text()", this.doc.getDocumentElement());
+    public String getValue(String name) {
 
-			if (subDocuments != null && StringUtils.isEmpty(response)) {
+        try {
+            String response = this.xpath.evaluate("//variable[@name='" + name + "']/text()", this.doc.getDocumentElement());
 
-				for (Document document : subDocuments) {
+            if (subDocuments != null && StringUtils.isEmpty(response)) {
 
-					response = this.xpath.evaluate("//variable[@name='" + name + "']/text()", document.getDocumentElement());
+                for (Document document : subDocuments) {
 
-					if (!StringUtils.isEmpty(response)) {
+                    response = this.xpath.evaluate("//variable[@name='" + name + "']/text()", document.getDocumentElement());
 
-						return response;
-					}
-				}
-			}
+                    if (!StringUtils.isEmpty(response)) {
 
-			return response;
+                        return response;
+                    }
+                }
+            }
 
-		} catch (XPathExpressionException e) {
-			return null;
-		}
-	}
+            return response;
+
+        } catch (XPathExpressionException e) {
+            return null;
+        }
+    }
 }

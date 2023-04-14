@@ -26,7 +26,8 @@ public class RESTEasyTracingMessage {
      */
     private final String requestId;
 
-    public RESTEasyTracingMessage(RESTEasyTracingEvent event, final String requestId, final long duration, final String[] args) {
+    public RESTEasyTracingMessage(final RESTEasyTracingEvent event, final String requestId, final long duration,
+            final String[] args) {
         this.requestId = requestId;
         this.event = event;
         this.duration = duration;
@@ -59,7 +60,6 @@ public class RESTEasyTracingMessage {
     public String toString() {
         return text;
     }
-
 
     public String getRequestId() {
         return requestId;

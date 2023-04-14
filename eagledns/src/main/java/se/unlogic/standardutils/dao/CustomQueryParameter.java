@@ -7,36 +7,36 @@
  ******************************************************************************/
 package se.unlogic.standardutils.dao;
 
-import se.unlogic.standardutils.populators.QueryParameterPopulator;
-
 import java.lang.reflect.Method;
 
-public class CustomQueryParameter<T>{
+import se.unlogic.standardutils.populators.QueryParameterPopulator;
 
-	private QueryParameterPopulator<?> queryParameterPopulator;
-	private Method queryMethod;
-	private Object paramValue;
+public class CustomQueryParameter<T> {
 
-	public CustomQueryParameter(Column<T,?> column , T bean) {
+    private QueryParameterPopulator<?> queryParameterPopulator;
+    private Method queryMethod;
+    private Object paramValue;
 
-		super();
-		this.queryParameterPopulator = column.getQueryParameterPopulator();
-		this.queryMethod = column.getQueryMethod();
-		this.paramValue = column.getBeanValue(bean);
-	}
+    public CustomQueryParameter(Column<T, ?> column, T bean) {
 
-	public QueryParameterPopulator<?> getQueryParameterPopulator() {
+        super();
+        this.queryParameterPopulator = column.getQueryParameterPopulator();
+        this.queryMethod = column.getQueryMethod();
+        this.paramValue = column.getBeanValue(bean);
+    }
 
-		return queryParameterPopulator;
-	}
+    public QueryParameterPopulator<?> getQueryParameterPopulator() {
 
-	public Method getQueryMethod() {
+        return queryParameterPopulator;
+    }
 
-		return queryMethod;
-	}
+    public Method getQueryMethod() {
 
-	public Object getParamValue() {
+        return queryMethod;
+    }
 
-		return paramValue;
-	}
+    public Object getParamValue() {
+
+        return paramValue;
+    }
 }

@@ -7,8 +7,16 @@
  ******************************************************************************/
 package se.unlogic.standardutils.xml;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
 import se.unlogic.standardutils.annotations.NoAnnotatedFieldsFoundException;
 import se.unlogic.standardutils.arrays.ArrayUtils;
 import se.unlogic.standardutils.date.DateUtils;
@@ -17,333 +25,332 @@ import se.unlogic.standardutils.string.DummyStringyfier;
 import se.unlogic.standardutils.string.StringUtils;
 import se.unlogic.standardutils.string.Stringyfier;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class XMLGenerator {
 
-	//TODO Use weak references in this map to prevent memory leaks
-	private static ConcurrentHashMap<Class<?>, ClassXMLInfo> FIELD_MAP = new ConcurrentHashMap<Class<?>, ClassXMLInfo>();
+    //TODO Use weak references in this map to prevent memory leaks
+    private static ConcurrentHashMap<Class<?>, ClassXMLInfo> FIELD_MAP = new ConcurrentHashMap<Class<?>, ClassXMLInfo>();
 
-	@SuppressWarnings("unchecked")
-	public static Element toXML(Object bean, Document doc){
+    @SuppressWarnings("unchecked")
+    public static Element toXML(Object bean, Document doc) {
 
-		ClassXMLInfo classInfo = FIELD_MAP.get(bean.getClass());
+        ClassXMLInfo classInfo = FIELD_MAP.get(bean.getClass());
 
-		if(classInfo == null){
+        if (classInfo == null) {
 
-			Class<?> clazz = bean.getClass();
+            Class<?> clazz = bean.getClass();
 
-			XMLElement xmlElement = clazz.getAnnotation(XMLElement.class);
+            XMLElement xmlElement = clazz.getAnnotation(XMLElement.class);
 
-			if(xmlElement == null){
+            if (xmlElement == null) {
 
-				throw new MissingXMLAnnotationException(clazz);
-			}
+                throw new MissingXMLAnnotationException(clazz);
+            }
 
-			String elementName = xmlElement.name();
+            String elementName = xmlElement.name();
 
-			if(StringUtils.isEmpty(elementName)){
+            if (StringUtils.isEmpty(elementName)) {
 
-				elementName = clazz.getSimpleName();
-			}
+                elementName = clazz.getSimpleName();
+            }
 
-			List<FieldXMLInfo> annotatedFields = new ArrayList<FieldXMLInfo>();
+            List<FieldXMLInfo> annotatedFields = new ArrayList<FieldXMLInfo>();
 
-			Class<?> currentClazz = clazz;
+            Class<?> currentClazz = clazz;
 
-			while (currentClazz != Object.class) {
+            while (currentClazz != Object.class) {
 
-				Field[] fields = currentClazz.getDeclaredFields();
+                Field[] fields = currentClazz.getDeclaredFields();
 
-				for(Field field : fields){
+                for (Field field : fields) {
 
-					XMLElement elementAnnotation = field.getAnnotation(XMLElement.class);
+                    XMLElement elementAnnotation = field.getAnnotation(XMLElement.class);
 
-					if(elementAnnotation != null){
+                    if (elementAnnotation != null) {
 
-						String name = elementAnnotation.name();
+                        String name = elementAnnotation.name();
 
-						if(StringUtils.isEmpty(name)){
+                        if (StringUtils.isEmpty(name)) {
 
-							name = field.getName();
-						}
+                            name = field.getName();
+                        }
 
-						Stringyfier valueFormatter = null;
+                        Stringyfier valueFormatter = null;
 
-						if(elementAnnotation.valueFormatter() != DummyStringyfier.class){
+                        if (elementAnnotation.valueFormatter() != DummyStringyfier.class) {
 
-							try {
-								valueFormatter = elementAnnotation.valueFormatter().newInstance();
+                            try {
+                                valueFormatter = elementAnnotation.valueFormatter().newInstance();
 
-							} catch (InstantiationException e) {
+                            } catch (InstantiationException e) {
 
-								throw new RuntimeException(e);
+                                throw new RuntimeException(e);
 
-							} catch (IllegalAccessException e) {
+                            } catch (IllegalAccessException e) {
 
-								throw new RuntimeException(e);
-							}
-						}
+                                throw new RuntimeException(e);
+                            }
+                        }
 
-						if(Collection.class.isAssignableFrom(field.getType())){
+                        if (Collection.class.isAssignableFrom(field.getType())) {
 
-							boolean elementable = false;
+                            boolean elementable = false;
 
-							if(ReflectionUtils.isGenericlyTyped(field) && Elementable.class.isAssignableFrom((Class<?>) ReflectionUtils.getGenericType(field))){
+                            if (ReflectionUtils.isGenericlyTyped(field)
+                                    && Elementable.class.isAssignableFrom((Class<?>) ReflectionUtils.getGenericType(field))) {
 
-								elementable = true;
-							}
+                                elementable = true;
+                            }
 
-							String childName = elementAnnotation.childName();
+                            String childName = elementAnnotation.childName();
 
-							if(StringUtils.isEmpty(childName)){
+                            if (StringUtils.isEmpty(childName)) {
 
-								childName = "value";
-							}
+                                childName = "value";
+                            }
 
-							annotatedFields.add(new FieldXMLInfo(name, field, FieldType.Element,elementAnnotation.cdata(),elementable,true,false,childName,elementAnnotation.skipChildParentElement(),valueFormatter));
+                            annotatedFields.add(new FieldXMLInfo(name, field, FieldType.Element, elementAnnotation.cdata(),
+                                    elementable, true, false, childName, elementAnnotation.skipChildParentElement(),
+                                    valueFormatter));
 
-						}else if(field.getType().isArray()){
+                        } else if (field.getType().isArray()) {
 
-							boolean elementable = false;
+                            boolean elementable = false;
 
-							if(Elementable.class.isAssignableFrom(field.getType())){
+                            if (Elementable.class.isAssignableFrom(field.getType())) {
 
-								elementable = true;
-							}
+                                elementable = true;
+                            }
 
-							String childName = elementAnnotation.childName();
+                            String childName = elementAnnotation.childName();
 
-							if(StringUtils.isEmpty(childName)){
+                            if (StringUtils.isEmpty(childName)) {
 
-								childName = "value";
-							}
+                                childName = "value";
+                            }
 
-							annotatedFields.add(new FieldXMLInfo(name, field, FieldType.Element,elementAnnotation.cdata(),elementable,false,true,childName,elementAnnotation.skipChildParentElement(),valueFormatter));
+                            annotatedFields.add(new FieldXMLInfo(name, field, FieldType.Element, elementAnnotation.cdata(),
+                                    elementable, false, true, childName, elementAnnotation.skipChildParentElement(),
+                                    valueFormatter));
 
-						}else{
+                        } else {
 
-							String childName = null;
+                            String childName = null;
 
-							if(!StringUtils.isEmpty(elementAnnotation.childName())){
+                            if (!StringUtils.isEmpty(elementAnnotation.childName())) {
 
-								childName = elementAnnotation.childName();
-							}
+                                childName = elementAnnotation.childName();
+                            }
 
-							annotatedFields.add(new FieldXMLInfo(name, field, FieldType.Element,elementAnnotation.cdata(),Elementable.class.isAssignableFrom(field.getType()),false,false,childName,false,valueFormatter));
-						}
+                            annotatedFields.add(new FieldXMLInfo(name, field, FieldType.Element, elementAnnotation.cdata(),
+                                    Elementable.class.isAssignableFrom(field.getType()), false, false, childName, false,
+                                    valueFormatter));
+                        }
 
-						ReflectionUtils.fixFieldAccess(field);
-					}
+                        ReflectionUtils.fixFieldAccess(field);
+                    }
 
-					XMLAttribute attributeAnnotation = field.getAnnotation(XMLAttribute.class);
+                    XMLAttribute attributeAnnotation = field.getAnnotation(XMLAttribute.class);
 
-					if(attributeAnnotation != null){
+                    if (attributeAnnotation != null) {
 
-						String name = attributeAnnotation.name();
+                        String name = attributeAnnotation.name();
 
-						if(StringUtils.isEmpty(name)){
+                        if (StringUtils.isEmpty(name)) {
 
-							name = field.getName();
-						}
+                            name = field.getName();
+                        }
 
-						Stringyfier valueFormatter = null;
+                        Stringyfier valueFormatter = null;
 
-						if(attributeAnnotation.valueFormatter() != DummyStringyfier.class){
+                        if (attributeAnnotation.valueFormatter() != DummyStringyfier.class) {
 
-							try {
-								valueFormatter = attributeAnnotation.valueFormatter().newInstance();
+                            try {
+                                valueFormatter = attributeAnnotation.valueFormatter().newInstance();
 
-							} catch (InstantiationException e) {
+                            } catch (InstantiationException e) {
 
-								throw new RuntimeException(e);
+                                throw new RuntimeException(e);
 
-							} catch (IllegalAccessException e) {
+                            } catch (IllegalAccessException e) {
 
-								throw new RuntimeException(e);
-							}
-						}
+                                throw new RuntimeException(e);
+                            }
+                        }
 
-						annotatedFields.add(new FieldXMLInfo(name, field, FieldType.Attribute,false,false,false,false,null,false,valueFormatter));
+                        annotatedFields.add(new FieldXMLInfo(name, field, FieldType.Attribute, false, false, false, false, null,
+                                false, valueFormatter));
 
-						ReflectionUtils.fixFieldAccess(field);
-					}
-				}
+                        ReflectionUtils.fixFieldAccess(field);
+                    }
+                }
 
-				currentClazz = currentClazz.getSuperclass();
-			}
+                currentClazz = currentClazz.getSuperclass();
+            }
 
-			if(annotatedFields.isEmpty()){
+            if (annotatedFields.isEmpty()) {
 
-				throw new NoAnnotatedFieldsFoundException(clazz,XMLElement.class,XMLAttribute.class);
-			}
+                throw new NoAnnotatedFieldsFoundException(clazz, XMLElement.class, XMLAttribute.class);
+            }
 
-			classInfo = new ClassXMLInfo(elementName, annotatedFields);
+            classInfo = new ClassXMLInfo(elementName, annotatedFields);
 
-			FIELD_MAP.put(clazz, classInfo);
-		}
+            FIELD_MAP.put(clazz, classInfo);
+        }
 
-		Element classElement = doc.createElement(classInfo.getElementName());
+        Element classElement = doc.createElement(classInfo.getElementName());
 
-		for(FieldXMLInfo fieldInfo : classInfo.getFields()){
+        for (FieldXMLInfo fieldInfo : classInfo.getFields()) {
 
-			Object fieldValue;
-			try {
-				fieldValue = fieldInfo.getField().get(bean);
-			} catch (IllegalArgumentException e) {
+            Object fieldValue;
+            try {
+                fieldValue = fieldInfo.getField().get(bean);
+            } catch (IllegalArgumentException e) {
 
-				throw new RuntimeException(e);
+                throw new RuntimeException(e);
 
-			} catch (IllegalAccessException e) {
+            } catch (IllegalAccessException e) {
 
-				throw new RuntimeException(e);
-			}
+                throw new RuntimeException(e);
+            }
 
-			if(fieldValue == null){
+            if (fieldValue == null) {
 
-				continue;
+                continue;
 
-			}else if(!fieldInfo.isList() && fieldInfo.getValueFormatter() != null){
+            } else if (!fieldInfo.isList() && fieldInfo.getValueFormatter() != null) {
 
-				fieldValue = fieldInfo.getValueFormatter().format(fieldValue);
+                fieldValue = fieldInfo.getValueFormatter().format(fieldValue);
 
-			}else if(fieldValue instanceof Date){
+            } else if (fieldValue instanceof Date) {
 
-				fieldValue = DateUtils.DATE_TIME_FORMATTER.format(fieldValue);
-			}
+                fieldValue = DateUtils.DATE_TIME_FORMATTER.format(fieldValue);
+            }
 
-			if(fieldInfo.getFieldType() == FieldType.Attribute){
+            if (fieldInfo.getFieldType() == FieldType.Attribute) {
 
-				classElement.setAttribute(fieldInfo.getName(), fieldValue.toString());
+                classElement.setAttribute(fieldInfo.getName(), fieldValue.toString());
 
-			}else if(fieldInfo.isList()){
+            } else if (fieldInfo.isList()) {
 
-				List<?> fieldValues = (List<?>)fieldValue;
+                List<?> fieldValues = (List<?>) fieldValue;
 
-				if(fieldValues.isEmpty()){
+                if (fieldValues.isEmpty()) {
 
-					continue;
-				}
+                    continue;
+                }
 
-				Element subElement;
-				
-				if(fieldInfo.skipSubElement()){
-					
-					subElement = classElement;
-					
-				}else{
-					
-					subElement = doc.createElement(fieldInfo.getName());
-				}
+                Element subElement;
 
+                if (fieldInfo.skipSubElement()) {
 
-				for(Object value : fieldValues){
+                    subElement = classElement;
 
-					if(value != null){
+                } else {
 
-						parseValue(fieldInfo,value,subElement,doc);
-					}
-				}
+                    subElement = doc.createElement(fieldInfo.getName());
+                }
 
-				if(!fieldInfo.skipSubElement() && subElement.hasChildNodes()){
-					classElement.appendChild(subElement);
-				}
+                for (Object value : fieldValues) {
 
-			}else if(fieldInfo.isArray()){
+                    if (value != null) {
 
-				Object[] fieldValues = (Object[])fieldValue;
+                        parseValue(fieldInfo, value, subElement, doc);
+                    }
+                }
 
-				if(ArrayUtils.isEmpty(fieldValues)){
+                if (!fieldInfo.skipSubElement() && subElement.hasChildNodes()) {
+                    classElement.appendChild(subElement);
+                }
 
-					continue;
-				}
+            } else if (fieldInfo.isArray()) {
 
-				Element subElement;
-				
-				if(fieldInfo.skipSubElement()){
-					
-					subElement = classElement;
-					
-				}else{
-					
-					subElement = doc.createElement(fieldInfo.getName());
-				}
+                Object[] fieldValues = (Object[]) fieldValue;
 
+                if (ArrayUtils.isEmpty(fieldValues)) {
 
-				for(Object value : fieldValues){
+                    continue;
+                }
 
-					if(value != null){
+                Element subElement;
 
-						parseValue(fieldInfo,value,subElement,doc);
-					}
-				}
+                if (fieldInfo.skipSubElement()) {
 
-				if(!fieldInfo.skipSubElement() && subElement.hasChildNodes()){
-					classElement.appendChild(subElement);
-				}
+                    subElement = classElement;
 
-			}else if(fieldInfo.isElementable()){
+                } else {
 
-				Element subElement = ((Elementable)fieldValue).toXML(doc);
+                    subElement = doc.createElement(fieldInfo.getName());
+                }
 
-				if(subElement != null){
+                for (Object value : fieldValues) {
 
-					if(fieldInfo.getChildName() != null){
+                    if (value != null) {
 
-						Element middleElement = doc.createElement(fieldInfo.getChildName());
-						classElement.appendChild(middleElement);
-						middleElement.appendChild(subElement);
+                        parseValue(fieldInfo, value, subElement, doc);
+                    }
+                }
 
-					}else{
-						classElement.appendChild(subElement);
-					}
-				}
-			}else if(fieldInfo.isCDATA()){
+                if (!fieldInfo.skipSubElement() && subElement.hasChildNodes()) {
+                    classElement.appendChild(subElement);
+                }
 
-				classElement.appendChild(XMLUtils.createCDATAElement(fieldInfo.getName(), fieldValue.toString(), doc));
+            } else if (fieldInfo.isElementable()) {
 
-			}else{
-				classElement.appendChild(XMLUtils.createElement(fieldInfo.getName(), fieldValue.toString(), doc));
-			}
-		}
+                Element subElement = ((Elementable) fieldValue).toXML(doc);
 
-		return classElement;
-	}
+                if (subElement != null) {
 
-	private static void parseValue(FieldXMLInfo fieldInfo, Object value, Element subElement, Document doc) {
+                    if (fieldInfo.getChildName() != null) {
 
-		if(fieldInfo.getValueFormatter() != null){
+                        Element middleElement = doc.createElement(fieldInfo.getChildName());
+                        classElement.appendChild(middleElement);
+                        middleElement.appendChild(subElement);
 
-			value = fieldInfo.getValueFormatter().format(value);
+                    } else {
+                        classElement.appendChild(subElement);
+                    }
+                }
+            } else if (fieldInfo.isCDATA()) {
 
-		}else if(value instanceof Date){
+                classElement.appendChild(XMLUtils.createCDATAElement(fieldInfo.getName(), fieldValue.toString(), doc));
 
-			value = DateUtils.DATE_TIME_FORMATTER.format(value);
-		}
+            } else {
+                classElement.appendChild(XMLUtils.createElement(fieldInfo.getName(), fieldValue.toString(), doc));
+            }
+        }
 
-		if(fieldInfo.isElementable()){
+        return classElement;
+    }
 
-			Element subSubElement = ((Elementable)value).toXML(doc);
+    private static void parseValue(FieldXMLInfo fieldInfo, Object value, Element subElement, Document doc) {
 
-			if(subSubElement != null){
+        if (fieldInfo.getValueFormatter() != null) {
 
-				subElement.appendChild(subSubElement);
-			}
-		}else{
+            value = fieldInfo.getValueFormatter().format(value);
 
-			if(fieldInfo.isCDATA()){
+        } else if (value instanceof Date) {
 
-				subElement.appendChild(XMLUtils.createCDATAElement(fieldInfo.getChildName(), value, doc));
+            value = DateUtils.DATE_TIME_FORMATTER.format(value);
+        }
 
-			}else{
+        if (fieldInfo.isElementable()) {
 
-				subElement.appendChild(XMLUtils.createElement(fieldInfo.getChildName(), value, doc));
-			}
-		}
-	}
+            Element subSubElement = ((Elementable) value).toXML(doc);
+
+            if (subSubElement != null) {
+
+                subElement.appendChild(subSubElement);
+            }
+        } else {
+
+            if (fieldInfo.isCDATA()) {
+
+                subElement.appendChild(XMLUtils.createCDATAElement(fieldInfo.getChildName(), value, doc));
+
+            } else {
+
+                subElement.appendChild(XMLUtils.createElement(fieldInfo.getChildName(), value, doc));
+            }
+        }
+    }
 }

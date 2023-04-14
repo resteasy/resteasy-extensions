@@ -7,32 +7,31 @@
  ******************************************************************************/
 package se.unlogic.standardutils.dao;
 
-import se.unlogic.standardutils.populators.BeanStringPopulator;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import se.unlogic.standardutils.populators.BeanStringPopulator;
 
 public class TypeBasedResultSetPopulator<Type> implements BeanResultSetPopulator<Type> {
 
-	private BeanStringPopulator<Type> beanStringPopulator;
-	private String columnName;
+    private BeanStringPopulator<Type> beanStringPopulator;
+    private String columnName;
 
-	public TypeBasedResultSetPopulator(BeanStringPopulator<Type> typePopulator, String columnName) {
+    public TypeBasedResultSetPopulator(BeanStringPopulator<Type> typePopulator, String columnName) {
 
-		this.beanStringPopulator = typePopulator;
-		this.columnName = columnName;
-	}
+        this.beanStringPopulator = typePopulator;
+        this.columnName = columnName;
+    }
 
-	public Type populate(ResultSet rs) throws SQLException {
+    public Type populate(ResultSet rs) throws SQLException {
 
-		String value = rs.getString(columnName);
+        String value = rs.getString(columnName);
 
-		if(value == null){
+        if (value == null) {
 
-			return null;
-		}
+            return null;
+        }
 
-		return beanStringPopulator.getValue(value);
-	}
+        return beanStringPopulator.getValue(value);
+    }
 }

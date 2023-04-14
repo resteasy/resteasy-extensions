@@ -12,17 +12,18 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public interface ManyToOneRelation<LocalType, RemoteType, RemoteKeyType> extends Column<LocalType,RemoteType>{
+public interface ManyToOneRelation<LocalType, RemoteType, RemoteKeyType> extends Column<LocalType, RemoteType> {
 
-	RemoteKeyType getBeanValue(LocalType bean);
+    RemoteKeyType getBeanValue(LocalType bean);
 
-	RemoteKeyType getParamValue(Object bean);
+    RemoteKeyType getParamValue(Object bean);
 
-	void getRemoteValue(LocalType bean, ResultSet resultSet, Connection connection, RelationQuery relations) throws SQLException;
+    void getRemoteValue(LocalType bean, ResultSet resultSet, Connection connection, RelationQuery relations)
+            throws SQLException;
 
-	void add(LocalType bean, Connection connection, RelationQuery relations) throws SQLException;
+    void add(LocalType bean, Connection connection, RelationQuery relations) throws SQLException;
 
-	void update(LocalType bean, Connection connection, RelationQuery relations) throws SQLException;
+    void update(LocalType bean, Connection connection, RelationQuery relations) throws SQLException;
 
-	Field getField();
+    Field getField();
 }

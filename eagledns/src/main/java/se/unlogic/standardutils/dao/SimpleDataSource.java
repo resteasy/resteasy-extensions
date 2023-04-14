@@ -7,7 +7,6 @@
  ******************************************************************************/
 package se.unlogic.standardutils.dao;
 
-import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,64 +14,63 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
+import javax.sql.DataSource;
 
 public class SimpleDataSource implements DataSource {
 
+    private String url;
+    private String username;
+    private String password;
 
-	private String url;
-	private String username;
-	private String password;
-	
-	public SimpleDataSource(String driver, String url, String username, String password) throws ClassNotFoundException {
+    public SimpleDataSource(String driver, String url, String username, String password) throws ClassNotFoundException {
 
-		super();
-		this.url = url;
-		this.username = username;
-		this.password = password;
-		
-		Class.forName(driver);
-	}
+        super();
+        this.url = url;
+        this.username = username;
+        this.password = password;
 
-	public Connection getConnection() throws SQLException {
+        Class.forName(driver);
+    }
 
-		return DriverManager.getConnection(this.url, username, password);
-	}
+    public Connection getConnection() throws SQLException {
 
-	public Connection getConnection(String username, String password) throws SQLException {
+        return DriverManager.getConnection(this.url, username, password);
+    }
 
-		return DriverManager.getConnection(this.url, username, password);
-	}
+    public Connection getConnection(String username, String password) throws SQLException {
 
-	public PrintWriter getLogWriter() throws SQLException {
+        return DriverManager.getConnection(this.url, username, password);
+    }
 
-		throw new UnsupportedOperationException();
-	}
+    public PrintWriter getLogWriter() throws SQLException {
 
-	public int getLoginTimeout() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
 
-		throw new UnsupportedOperationException();
-	}
+    public int getLoginTimeout() throws SQLException {
 
-	public void setLogWriter(PrintWriter out) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
 
-		throw new UnsupportedOperationException();
-	}
+    public void setLogWriter(PrintWriter out) throws SQLException {
 
-	public void setLoginTimeout(int seconds) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
 
-		throw new UnsupportedOperationException();
-	}
+    public void setLoginTimeout(int seconds) throws SQLException {
 
-	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
-		return false;
-	}
+        throw new UnsupportedOperationException();
+    }
 
-	public <T> T unwrap(Class<T> arg0) throws SQLException {
-		return null;
-	}
+    public boolean isWrapperFor(Class<?> arg0) throws SQLException {
+        return false;
+    }
 
-   public Logger getParentLogger() throws SQLFeatureNotSupportedException
-   {
-      return null;
-   }
+    public <T> T unwrap(Class<T> arg0) throws SQLException {
+        return null;
+    }
+
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        return null;
+    }
 }

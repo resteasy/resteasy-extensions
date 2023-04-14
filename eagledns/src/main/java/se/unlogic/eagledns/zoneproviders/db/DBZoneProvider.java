@@ -27,237 +27,242 @@ import se.unlogic.standardutils.reflection.ReflectionUtils;
 
 public class DBZoneProvider implements ZoneProvider {
 
-	private static final Field RECORD_RELATION = ReflectionUtils.getField(DBZone.class, "records");
+    private static final Field RECORD_RELATION = ReflectionUtils.getField(DBZone.class, "records");
 
-	private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = Logger.getLogger(this.getClass());
 
-	private String name;
-	private String driver;
-	private String url;
-	private String username;
-	private String password;
+    private String name;
+    private String driver;
+    private String url;
+    private String username;
+    private String password;
 
-	private SimpleAnnotatedDAOFactory annotatedDAOFactory;
-	private AnnotatedDAO<DBZone> zoneDAO;
-	private AnnotatedDAO<DBRecord> recordDAO;
-	private HighLevelQuery<DBZone> primaryZoneQuery;
-	private HighLevelQuery<DBZone> secondaryZoneQuery;
-	private QueryParameterFactory<DBZone, Integer> zoneIDQueryParameterFactory;
-	private QueryParameterFactory<DBRecord, DBZone> recordZoneQueryParameterFactory;
+    private SimpleAnnotatedDAOFactory annotatedDAOFactory;
+    private AnnotatedDAO<DBZone> zoneDAO;
+    private AnnotatedDAO<DBRecord> recordDAO;
+    private HighLevelQuery<DBZone> primaryZoneQuery;
+    private HighLevelQuery<DBZone> secondaryZoneQuery;
+    private QueryParameterFactory<DBZone, Integer> zoneIDQueryParameterFactory;
+    private QueryParameterFactory<DBRecord, DBZone> recordZoneQueryParameterFactory;
 
-	public void init(String name) throws ClassNotFoundException {
-		this.name = name;
+    public void init(String name) throws ClassNotFoundException {
+        this.name = name;
 
-		DataSource dataSource;
+        DataSource dataSource;
 
-		try {
-			dataSource = new SimpleDataSource(driver, url, username, password);
+        try {
+            dataSource = new SimpleDataSource(driver, url, username, password);
 
-		} catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
 
-			log.error("Unable to load JDBC driver " + driver, e);
+            log.error("Unable to load JDBC driver " + driver, e);
 
-			throw e;
-		}
+            throw e;
+        }
 
-		this.annotatedDAOFactory = new SimpleAnnotatedDAOFactory();
+        this.annotatedDAOFactory = new SimpleAnnotatedDAOFactory();
 
-		this.zoneDAO = new AnnotatedDAO<DBZone>(dataSource,DBZone.class, annotatedDAOFactory);
-		this.recordDAO = new AnnotatedDAO<DBRecord>(dataSource,DBRecord.class, annotatedDAOFactory);
+        this.zoneDAO = new AnnotatedDAO<DBZone>(dataSource, DBZone.class, annotatedDAOFactory);
+        this.recordDAO = new AnnotatedDAO<DBRecord>(dataSource, DBRecord.class, annotatedDAOFactory);
 
-		QueryParameterFactory<DBZone, Boolean> zoneTypeParamFactory = zoneDAO.getParamFactory("secondary", boolean.class);
+        QueryParameterFactory<DBZone, Boolean> zoneTypeParamFactory = zoneDAO.getParamFactory("secondary", boolean.class);
 
-		this.primaryZoneQuery = new HighLevelQuery<DBZone>(zoneTypeParamFactory.getParameter(false),RECORD_RELATION);
-		this.secondaryZoneQuery = new HighLevelQuery<DBZone>(zoneTypeParamFactory.getParameter(true),RECORD_RELATION);
-		
-		this.zoneIDQueryParameterFactory = zoneDAO.getParamFactory("zoneID", Integer.class);
-		this.recordZoneQueryParameterFactory = recordDAO.getParamFactory("zone", DBZone.class);
-	}
+        this.primaryZoneQuery = new HighLevelQuery<DBZone>(zoneTypeParamFactory.getParameter(false), RECORD_RELATION);
+        this.secondaryZoneQuery = new HighLevelQuery<DBZone>(zoneTypeParamFactory.getParameter(true), RECORD_RELATION);
 
-	public Collection<Zone> getPrimaryZones() {
+        this.zoneIDQueryParameterFactory = zoneDAO.getParamFactory("zoneID", Integer.class);
+        this.recordZoneQueryParameterFactory = recordDAO.getParamFactory("zone", DBZone.class);
+    }
 
-		try {
-			List<DBZone> dbZones = this.zoneDAO.getAll(primaryZoneQuery);
+    public Collection<Zone> getPrimaryZones() {
 
-			if(dbZones != null){
+        try {
+            List<DBZone> dbZones = this.zoneDAO.getAll(primaryZoneQuery);
 
-				ArrayList<Zone> zones = new ArrayList<Zone>(dbZones.size());
+            if (dbZones != null) {
 
-				for(DBZone dbZone : dbZones){
+                ArrayList<Zone> zones = new ArrayList<Zone>(dbZones.size());
 
-					try {
-						zones.add(dbZone.toZone());
+                for (DBZone dbZone : dbZones) {
 
-					} catch (IOException e) {
+                    try {
+                        zones.add(dbZone.toZone());
 
-						log.error("Unable to parse zone " + dbZone.getName(),e);
-					}
-				}
+                    } catch (IOException e) {
 
-				return zones;
-			}
+                        log.error("Unable to parse zone " + dbZone.getName(), e);
+                    }
+                }
 
-		} catch (SQLException e) {
+                return zones;
+            }
 
-			log.error("Error getting primary zones from DB zone provider " + name,e);
-		}
+        } catch (SQLException e) {
 
-		return null;
-	}
+            log.error("Error getting primary zones from DB zone provider " + name, e);
+        }
 
-	public Collection<SecondaryZone> getSecondaryZones() {
+        return null;
+    }
 
-		try {
-			List<DBZone> dbZones = this.zoneDAO.getAll(this.secondaryZoneQuery);
+    public Collection<SecondaryZone> getSecondaryZones() {
 
-			if(dbZones != null){
+        try {
+            List<DBZone> dbZones = this.zoneDAO.getAll(this.secondaryZoneQuery);
 
-				ArrayList<SecondaryZone> zones = new ArrayList<SecondaryZone>(dbZones.size());
+            if (dbZones != null) {
 
-				for(DBZone dbZone : dbZones){
+                ArrayList<SecondaryZone> zones = new ArrayList<SecondaryZone>(dbZones.size());
 
-					try {
-						DBSecondaryZone secondaryZone = new DBSecondaryZone(dbZone.getZoneID() ,dbZone.getName(), dbZone.getPrimaryDNS(), dbZone.getDclass());
+                for (DBZone dbZone : dbZones) {
 
-						if(dbZone.getRecords() != null){
-							secondaryZone.setZoneCopy(dbZone.toZone());
-							secondaryZone.setDownloaded(dbZone.getDownloaded());
-						}
+                    try {
+                        DBSecondaryZone secondaryZone = new DBSecondaryZone(dbZone.getZoneID(), dbZone.getName(),
+                                dbZone.getPrimaryDNS(), dbZone.getDclass());
 
-						zones.add(secondaryZone);
+                        if (dbZone.getRecords() != null) {
+                            secondaryZone.setZoneCopy(dbZone.toZone());
+                            secondaryZone.setDownloaded(dbZone.getDownloaded());
+                        }
 
-					} catch (IOException e) {
+                        zones.add(secondaryZone);
 
-						log.error("Unable to parse zone " + dbZone.getName(),e);
-					}
-				}
+                    } catch (IOException e) {
 
-				return zones;
-			}
+                        log.error("Unable to parse zone " + dbZone.getName(), e);
+                    }
+                }
 
-		} catch (SQLException e) {
+                return zones;
+            }
 
-			log.error("Error getting secondary zones from DB zone provider " + name,e);
-		}
+        } catch (SQLException e) {
 
-		return null;
-	}
+            log.error("Error getting secondary zones from DB zone provider " + name, e);
+        }
 
-	public void zoneUpdated(SecondaryZone zone) {
+        return null;
+    }
 
-		if(!(zone instanceof DBSecondaryZone)){
+    public void zoneUpdated(SecondaryZone zone) {
 
-			log.warn(zone.getClass() + " is not an instance of " + DBSecondaryZone.class + ", ignoring zone update");
+        if (!(zone instanceof DBSecondaryZone)) {
 
-			return;
-		}
+            log.warn(zone.getClass() + " is not an instance of " + DBSecondaryZone.class + ", ignoring zone update");
 
-		Integer zoneID = ((DBSecondaryZone)zone).getZoneID();
+            return;
+        }
 
-		TransactionHandler transactionHandler = null;
+        Integer zoneID = ((DBSecondaryZone) zone).getZoneID();
 
-		try {
-			transactionHandler = zoneDAO.createTransaction();
+        TransactionHandler transactionHandler = null;
 
-			DBZone dbZone = this.zoneDAO.get(new HighLevelQuery<DBZone>(this.zoneIDQueryParameterFactory.getParameter(zoneID),(Field)null),transactionHandler);
+        try {
+            transactionHandler = zoneDAO.createTransaction();
 
+            DBZone dbZone = this.zoneDAO.get(
+                    new HighLevelQuery<DBZone>(this.zoneIDQueryParameterFactory.getParameter(zoneID), (Field) null),
+                    transactionHandler);
 
-			if(dbZone == null){
+            if (dbZone == null) {
 
-				log.warn("Unable to find secondary zone with zoneID " + zoneID + " in DB, ignoring zone update");
+                log.warn("Unable to find secondary zone with zoneID " + zoneID + " in DB, ignoring zone update");
 
-				return;
-			}
+                return;
+            }
 
-			dbZone.parse(zone.getZoneCopy(), true);
+            dbZone.parse(zone.getZoneCopy(), true);
 
-			zoneDAO.update(dbZone,transactionHandler, null);
+            zoneDAO.update(dbZone, transactionHandler, null);
 
-			recordDAO.delete(new HighLevelQuery<DBRecord>(recordZoneQueryParameterFactory.getParameter(dbZone),(Field)null), transactionHandler);
+            recordDAO.delete(new HighLevelQuery<DBRecord>(recordZoneQueryParameterFactory.getParameter(dbZone), (Field) null),
+                    transactionHandler);
 
-			if(dbZone.getRecords() != null){
+            if (dbZone.getRecords() != null) {
 
-				for(DBRecord dbRecord : dbZone.getRecords()){
+                for (DBRecord dbRecord : dbZone.getRecords()) {
 
-					dbRecord.setZone(dbZone);
+                    dbRecord.setZone(dbZone);
 
-					this.recordDAO.add(dbRecord, transactionHandler, null);
-				}
-			}
+                    this.recordDAO.add(dbRecord, transactionHandler, null);
+                }
+            }
 
-			transactionHandler.commit();
+            transactionHandler.commit();
 
-			log.debug("Changes in seconday zone " + dbZone + " saved");
+            log.debug("Changes in seconday zone " + dbZone + " saved");
 
-		} catch (SQLException e) {
+        } catch (SQLException e) {
 
-			log.error("Unable to save changes in secondary zone " + zone.getZoneName(), e);
-			TransactionHandler.autoClose(transactionHandler);
-		}
-	}
+            log.error("Unable to save changes in secondary zone " + zone.getZoneName(), e);
+            TransactionHandler.autoClose(transactionHandler);
+        }
+    }
 
-	public void zoneChecked(SecondaryZone zone) {
+    public void zoneChecked(SecondaryZone zone) {
 
-		if(!(zone instanceof DBSecondaryZone)){
+        if (!(zone instanceof DBSecondaryZone)) {
 
-			log.warn(zone.getClass() + " is not an instance of " + DBSecondaryZone.class + ", ignoring zone check");
+            log.warn(zone.getClass() + " is not an instance of " + DBSecondaryZone.class + ", ignoring zone check");
 
-			return;
-		}
+            return;
+        }
 
-		Integer zoneID = ((DBSecondaryZone)zone).getZoneID();
+        Integer zoneID = ((DBSecondaryZone) zone).getZoneID();
 
-		TransactionHandler transactionHandler = null;
+        TransactionHandler transactionHandler = null;
 
-		try {
-			transactionHandler = zoneDAO.createTransaction();
+        try {
+            transactionHandler = zoneDAO.createTransaction();
 
-			DBZone dbZone = this.zoneDAO.get(new HighLevelQuery<DBZone>(this.zoneIDQueryParameterFactory.getParameter(zoneID), (Field)null),transactionHandler);
+            DBZone dbZone = this.zoneDAO.get(
+                    new HighLevelQuery<DBZone>(this.zoneIDQueryParameterFactory.getParameter(zoneID), (Field) null),
+                    transactionHandler);
 
-			if(dbZone == null){
+            if (dbZone == null) {
 
-				log.warn("Unable to find secondary zone with zoneID " + zoneID + " in DB, ignoring zone update");
+                log.warn("Unable to find secondary zone with zoneID " + zoneID + " in DB, ignoring zone update");
 
-				return;
-			}
+                return;
+            }
 
-			dbZone.parse(zone.getZoneCopy(), true);
+            dbZone.parse(zone.getZoneCopy(), true);
 
-			zoneDAO.update(dbZone,transactionHandler, null);
+            zoneDAO.update(dbZone, transactionHandler, null);
 
-			transactionHandler.commit();
+            transactionHandler.commit();
 
-			log.debug("Changes in seconday zone " + dbZone + " saved");
+            log.debug("Changes in seconday zone " + dbZone + " saved");
 
-		} catch (SQLException e) {
+        } catch (SQLException e) {
 
-			log.error("Unable to save changes in secondary zone " + zone.getZoneName(), e);
-			TransactionHandler.autoClose(transactionHandler);
-		}
-	}
+            log.error("Unable to save changes in secondary zone " + zone.getZoneName(), e);
+            TransactionHandler.autoClose(transactionHandler);
+        }
+    }
 
-	public void unload() {
+    public void unload() {
 
-		//Nothing to do here...
-	}
+        //Nothing to do here...
+    }
 
-	public void setDriver(String driver) {
+    public void setDriver(String driver) {
 
-		this.driver = driver;
-	}
+        this.driver = driver;
+    }
 
-	public void setUsername(String username) {
+    public void setUsername(String username) {
 
-		this.username = username;
-	}
+        this.username = username;
+    }
 
-	public void setPassword(String password) {
+    public void setPassword(String password) {
 
-		this.password = password;
-	}
+        this.password = password;
+    }
 
-	public void setUrl(String url) {
+    public void setUrl(String url) {
 
-		this.url = url;
-	}
+        this.url = url;
+    }
 }

@@ -17,6 +17,7 @@
 package org.jboss.resteasy.plugins.cache.server;
 
 import java.io.IOException;
+
 import jakarta.ws.rs.core.Configurable;
 import jakarta.ws.rs.core.Feature;
 import jakarta.ws.rs.core.FeatureContext;
@@ -52,7 +53,8 @@ public class ServerCacheFeature implements Feature {
     @Override
     public boolean configure(FeatureContext configurable) {
         ServerCache cache = getCache(configurable);
-        if (cache == null) return false;
+        if (cache == null)
+            return false;
         configurable.register(new ServerCacheHitFilter(cache));
         configurable.register(new ServerCacheInterceptor(cache));
         return true;
@@ -75,11 +77,14 @@ public class ServerCacheFeature implements Feature {
     }
 
     protected ServerCache getCache(Configurable<?> configurable) {
-        if (this.cache != null) return this.cache;
+        if (this.cache != null)
+            return this.cache;
         ServerCache c = (ServerCache) configurable.getConfiguration().getProperty(ServerCache.class.getName());
-        if (c != null) return c;
+        if (c != null)
+            return c;
         c = getXmlCache(configurable);
-        if (c != null) return c;
+        if (c != null)
+            return c;
         return getDefaultCache();
     }
 
@@ -107,7 +112,8 @@ public class ServerCacheFeature implements Feature {
         if (path == null)
             path = configuration.getOptionalValue("server.request.cache.infinispan.config.file", String.class)
                     .orElse(null);
-        if (path == null) return null;
+        if (path == null)
+            return null;
 
         String name = (String) configurable.getConfiguration()
                 .getProperty("server.request.cache.infinispan.cache.name");

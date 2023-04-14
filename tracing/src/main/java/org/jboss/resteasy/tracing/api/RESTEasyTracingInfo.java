@@ -1,9 +1,9 @@
 package org.jboss.resteasy.tracing.api;
 
-import org.jboss.resteasy.tracing.api.providers.TextBasedRESTEasyTracingInfo;
-
 import java.util.Iterator;
 import java.util.ServiceLoader;
+
+import org.jboss.resteasy.tracing.api.providers.TextBasedRESTEasyTracingInfo;
 
 public abstract class RESTEasyTracingInfo {
 
@@ -14,7 +14,7 @@ public abstract class RESTEasyTracingInfo {
         INSTANCES = ServiceLoader.load(RESTEasyTracingInfo.class, Thread.currentThread().getContextClassLoader());
     }
 
-    public static RESTEasyTracingInfo get(String format) {
+    public static RESTEasyTracingInfo get(final String format) {
         if (format == null || format.isEmpty()) {
             return DEFAULT;
         } else {
@@ -39,5 +39,5 @@ public abstract class RESTEasyTracingInfo {
 
     public abstract void addMessage(RESTEasyTracingMessage message);
 
-    public abstract String formatDuration(final long duration);
+    public abstract String formatDuration(long duration);
 }

@@ -6,7 +6,7 @@ public interface RESTEasyTracingEvent {
      *
      * @return event name.
      */
-    public String name();
+    String name();
 
     /**
      * Category of event, more events share same category.
@@ -14,7 +14,7 @@ public interface RESTEasyTracingEvent {
      *
      * @return event category.
      */
-    public String category();
+    String category();
 
     /**
      * Level of event.
@@ -22,7 +22,7 @@ public interface RESTEasyTracingEvent {
      *
      * @return event trace level.
      */
-    public RESTEasyTracingLevel level();
+    RESTEasyTracingLevel level();
 
     /**
      * Message format. Use {@link String#format(String, Object...)} format.
@@ -30,6 +30,6 @@ public interface RESTEasyTracingEvent {
      *
      * @return message format
      */
-    public String messageFormat();
+    String messageFormat();
 
 }

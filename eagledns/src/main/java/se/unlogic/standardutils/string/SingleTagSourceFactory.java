@@ -3,30 +3,29 @@ package se.unlogic.standardutils.string;
 import java.util.Collections;
 import java.util.Set;
 
+public class SingleTagSourceFactory<T> implements TagSourceFactory<T> {
 
-public class SingleTagSourceFactory<T> implements TagSourceFactory<T>{
+    protected Set<String> tags;
+    protected String tag;
 
-	protected Set<String> tags;
-	protected String tag;
-	
-	public SingleTagSourceFactory(String tag){
-		
-		this.tags = Collections.singleton(tag);
-		this.tag = tag;
-	}
+    public SingleTagSourceFactory(String tag) {
 
-	public <X extends T> TagSource getTagSource(X value) {
+        this.tags = Collections.singleton(tag);
+        this.tag = tag;
+    }
 
-		return new SingleTagSource(tags, value.toString());
-	}
+    public <X extends T> TagSource getTagSource(X value) {
 
-	public Set<String> getTagsSet() {
+        return new SingleTagSource(tags, value.toString());
+    }
 
-		return tags;
-	}
+    public Set<String> getTagsSet() {
 
-	public String getAvailableTags() {
+        return tags;
+    }
 
-		return tag;
-	}
+    public String getAvailableTags() {
+
+        return tag;
+    }
 }

@@ -16,7 +16,6 @@
 
 package org.jboss.resteasy.plugins.cache.server;
 
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.EntityTag;
@@ -56,8 +56,8 @@ public class InfinispanCache implements ServerCache {
         private transient MultivaluedMap<String, String> varyHeaders;
 
         private CacheEntry(final MultivaluedMap<String, Object> headers, final byte[] cached, final int expires,
-                           final String etag, final MediaType mediaType,
-                           final MultivaluedMap<String, String> varyHeaders) {
+                final String etag, final MediaType mediaType,
+                final MultivaluedMap<String, String> varyHeaders) {
             this.cached = cached;
             this.expires = expires;
             this.headers = headers;
@@ -121,11 +121,13 @@ public class InfinispanCache implements ServerCache {
     public Entry get(String uri, MediaType accept, MultivaluedMap<String, String> headers) {
         @SuppressWarnings("unchecked")
         Set<String> entries = (Set<String>) cache.get(uri);
-        if (entries == null) return null;
+        if (entries == null)
+            return null;
 
         for (String entry : entries) {
             CacheEntry cacheEntry = (CacheEntry) cache.get(entry);
-            if (cacheEntry == null) continue;
+            if (cacheEntry == null)
+                continue;
             if (accept.isCompatible(cacheEntry.getMediaType()) && !ServerCache.mayVary(cacheEntry, headers)) {
                 return cacheEntry;
             }
@@ -135,7 +137,7 @@ public class InfinispanCache implements ServerCache {
 
     @SuppressWarnings("unchecked")
     public Entry add(String uri, MediaType mediaType, CacheControl cc, MultivaluedMap<String, Object> headers,
-                     byte[] entity, String etag, MultivaluedMap<String, String> varyHeaders) {
+            byte[] entity, String etag, MultivaluedMap<String, String> varyHeaders) {
         // there's a race condition here with a concurrent get() method above.  Too bad JBoss Cache doesn't have a way to create
         // a node before hand then insert it
         CacheEntry cacheEntry = new CacheEntry(headers, entity, cc.getMaxAge(), etag, mediaType, varyHeaders);
@@ -156,7 +158,8 @@ public class InfinispanCache implements ServerCache {
     public void remove(String uri) {
         @SuppressWarnings("unchecked")
         Set<String> entries = (Set<String>) cache.remove(uri);
-        if (entries == null) return;
+        if (entries == null)
+            return;
         for (String entry : entries) {
             cache.remove(entry);
         }
@@ -168,12 +171,12 @@ public class InfinispanCache implements ServerCache {
 
     protected static MultivaluedMap<String, ?> stringifyHeaders(MultivaluedMap<String, ?> headers) {
         MultivaluedMap<String, Object> holders = new MultivaluedTreeMap<String, Object>();
-        for (Iterator<String> it1 = headers.keySet().iterator(); it1.hasNext(); ) {
+        for (Iterator<String> it1 = headers.keySet().iterator(); it1.hasNext();) {
             String key = it1.next();
             List<Object> outList = new ArrayList<Object>();
             holders.put(key, outList);
             List<?> list = headers.get(key);
-            for (Iterator<?> it2 = list.iterator(); it2.hasNext(); ) {
+            for (Iterator<?> it2 = list.iterator(); it2.hasNext();) {
                 Object o = it2.next();
                 if (o instanceof CacheControl) {
                     outList.add(new HeaderHolder(HeaderHolder.Type.CACHE_CONTROL, CacheControl.class.cast(o)
@@ -192,15 +195,14 @@ public class InfinispanCache implements ServerCache {
         return holders;
     }
 
-
     protected static MultivaluedMap<String, Object> unstringifyHeaders(MultivaluedMap<String, Object> headers) {
         MultivaluedMap<String, Object> holders = new MultivaluedTreeMap<String, Object>();
-        for (Iterator<String> it1 = headers.keySet().iterator(); it1.hasNext(); ) {
+        for (Iterator<String> it1 = headers.keySet().iterator(); it1.hasNext();) {
             String key = it1.next();
             List<Object> outList = new ArrayList<Object>();
             holders.put(key, outList);
             List<Object> list = headers.get(key);
-            for (Iterator<Object> it2 = list.iterator(); it2.hasNext(); ) {
+            for (Iterator<Object> it2 = list.iterator(); it2.hasNext();) {
                 HeaderHolder holder = HeaderHolder.class.cast(it2.next());
                 if (HeaderHolder.Type.CACHE_CONTROL.equals(holder.getType())) {
                     outList.add(CacheControl.valueOf(holder.getValue()));

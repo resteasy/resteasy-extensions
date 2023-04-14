@@ -4,28 +4,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-
 public class BeanChainPopulator<T> implements BeanResultSetPopulator<T> {
 
-	protected BeanResultSetPopulator<T> populator;
-	protected List<ChainedResultSetPopulator<T>> chainedResultSetPopulators;
-	
-	public BeanChainPopulator(List<ChainedResultSetPopulator<T>> chainedResultSetPopulators, BeanResultSetPopulator<T> populator) {
+    protected BeanResultSetPopulator<T> populator;
+    protected List<ChainedResultSetPopulator<T>> chainedResultSetPopulators;
 
-		super();
-		this.populator = populator;
-		this.chainedResultSetPopulators = chainedResultSetPopulators;
-	}
+    public BeanChainPopulator(List<ChainedResultSetPopulator<T>> chainedResultSetPopulators,
+            BeanResultSetPopulator<T> populator) {
 
-	public T populate(ResultSet rs) throws SQLException {
+        super();
+        this.populator = populator;
+        this.chainedResultSetPopulators = chainedResultSetPopulators;
+    }
 
-		T bean = populator.populate(rs);
-		
-		for(ChainedResultSetPopulator<T> chainedPopulator : chainedResultSetPopulators){
-			
-			chainedPopulator.populate(bean, rs);
-		}
-		
-		return bean;
-	}
+    public T populate(ResultSet rs) throws SQLException {
+
+        T bean = populator.populate(rs);
+
+        for (ChainedResultSetPopulator<T> chainedPopulator : chainedResultSetPopulators) {
+
+            chainedPopulator.populate(bean, rs);
+        }
+
+        return bean;
+    }
 }

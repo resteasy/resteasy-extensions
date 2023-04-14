@@ -18,7 +18,12 @@ package org.jboss.resteasy.test.cache;
 
 import static org.jboss.resteasy.test.TestPortProvider.generateURL;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -33,7 +38,6 @@ import jakarta.ws.rs.client.Invocation.Builder;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
-import org.apache.commons.io.FileUtils;
 import org.jboss.resteasy.annotations.cache.Cache;
 import org.jboss.resteasy.plugins.cache.server.ServerCacheFeature;
 import org.jboss.resteasy.plugins.server.netty.NettyJaxrsServer;
@@ -129,7 +133,7 @@ public class PersistentServerCacheTest {
 
     @BeforeEach
     public void before() throws Exception {
-        FileUtils.deleteDirectory(new File("target/TestCache"));
+        recursiveDelete(java.nio.file.Path.of("target/TestCache"));
 
         server = new NettyJaxrsServer();
         server.setPort(TestPortProvider.getPort());
@@ -147,7 +151,7 @@ public class PersistentServerCacheTest {
 
     @AfterEach
     public void after() throws Exception {
-        FileUtils.deleteDirectory(new File("target/TestCache"));
+        recursiveDelete(java.nio.file.Path.of("target/TestCache"));
         server.stop();
         server = null;
         dispatcher = null;
@@ -171,7 +175,6 @@ public class PersistentServerCacheTest {
             Assertions.assertEquals(response.readEntity(String.class), "stuff");
         }
 
-
         Thread.sleep(2000);
 
         {
@@ -183,7 +186,6 @@ public class PersistentServerCacheTest {
             response.close();
         }
     }
-
 
     @Test
     public void testCache() throws Exception {
@@ -199,7 +201,6 @@ public class PersistentServerCacheTest {
             Assertions.assertNotNull(etag);
             Assertions.assertEquals(response.readEntity(String.class), "hello world" + 1);
         }
-
 
         {
             Builder request = client.target(generateURL("/cache")).request();
@@ -219,7 +220,6 @@ public class PersistentServerCacheTest {
             Assertions.assertEquals(Response.Status.NOT_MODIFIED.getStatusCode(), response.getStatus());
             response.close();
         }
-
 
         Thread.sleep(2000);
 
@@ -261,7 +261,6 @@ public class PersistentServerCacheTest {
             Assertions.assertEquals(response.readEntity(String.class), "hello world" + 3);
         }
     }
-
 
     @Test
     public void testAccepts() {
@@ -416,6 +415,30 @@ public class PersistentServerCacheTest {
             Assertions.assertEquals("foo", foo.readEntity(String.class));
             int currentCount = Integer.parseInt(foo.getHeaderString("X-Count"));
             Assertions.assertEquals(cachedCount, currentCount);
+        }
+    }
+
+    private static void recursiveDelete(final java.nio.file.Path path) throws IOException {
+        if (Files.exists(path)) {
+            if (Files.isDirectory(path)) {
+                Files.walkFileTree(path, new SimpleFileVisitor<>() {
+                    @Override
+                    public FileVisitResult visitFile(final java.nio.file.Path file, final BasicFileAttributes attrs)
+                            throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(final java.nio.file.Path dir, final IOException exc)
+                            throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } else {
+                Files.delete(path);
+            }
         }
     }
 }

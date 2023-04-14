@@ -9,10 +9,9 @@ package se.unlogic.standardutils.string;
 
 import java.util.Set;
 
-
 public interface TagSource {
 
-	Set<String> getTags();
-	
-	String getTagValue(String tag);
+    Set<String> getTags();
+
+    String getTagValue(String tag);
 }

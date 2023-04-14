@@ -7,29 +7,28 @@
  ******************************************************************************/
 package se.unlogic.standardutils.dao;
 
-import se.unlogic.standardutils.dao.querys.GeneratedKeyCollector;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import se.unlogic.standardutils.dao.querys.GeneratedKeyCollector;
 
 public class ColumnKeyCollectorWrapper<T> implements GeneratedKeyCollector {
 
-	private ArrayList<ColumnKeyCollector<T>> columnKeyCollectors;
-	private T bean;
+    private ArrayList<ColumnKeyCollector<T>> columnKeyCollectors;
+    private T bean;
 
-	public ColumnKeyCollectorWrapper(ArrayList<ColumnKeyCollector<T>> columnKeyCollectors, T bean) {
+    public ColumnKeyCollectorWrapper(ArrayList<ColumnKeyCollector<T>> columnKeyCollectors, T bean) {
 
-		this.columnKeyCollectors = columnKeyCollectors;
-		this.bean = bean;
-	}
+        this.columnKeyCollectors = columnKeyCollectors;
+        this.bean = bean;
+    }
 
-	public void collect(ResultSet rs) throws SQLException {
+    public void collect(ResultSet rs) throws SQLException {
 
-		for(ColumnKeyCollector<T> keyCollector : columnKeyCollectors){
+        for (ColumnKeyCollector<T> keyCollector : columnKeyCollectors) {
 
-			keyCollector.collect(bean, rs);
-		}
-	}
+            keyCollector.collect(bean, rs);
+        }
+    }
 }

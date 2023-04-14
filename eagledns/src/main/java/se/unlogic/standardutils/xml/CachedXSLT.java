@@ -12,13 +12,15 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 
 /**
- * An interface that is meant to wrap the raw {@link Templates} object and provide extra functionality such as reloading the stylesheet.
- * 
+ * An interface that is meant to wrap the raw {@link Templates} object and provide extra functionality such as reloading the
+ * stylesheet.
+ *
  * @author Robert "Unlogic" Olofsson (unlogic@unlogic.se)
  *
  */
 public interface CachedXSLT {
 
-	void reloadStyleSheet() throws TransformerConfigurationException;
-	Transformer getTransformer() throws TransformerConfigurationException;
+    void reloadStyleSheet() throws TransformerConfigurationException;
+
+    Transformer getTransformer() throws TransformerConfigurationException;
 }

@@ -74,7 +74,7 @@ public enum RESTEasyMsgTraceEvent implements RESTEasyTracingEvent {
     private final String category;
     private final String messageFormat;
 
-    RESTEasyMsgTraceEvent(RESTEasyTracingLevel level, String category, String messageFormat) {
+    RESTEasyMsgTraceEvent(final RESTEasyTracingLevel level, final String category, final String messageFormat) {
         this.level = level;
         this.category = category;
         this.messageFormat = messageFormat;

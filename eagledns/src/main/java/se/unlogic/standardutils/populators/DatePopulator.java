@@ -7,57 +7,57 @@
  ******************************************************************************/
 package se.unlogic.standardutils.populators;
 
-import se.unlogic.standardutils.date.DateUtils;
-import se.unlogic.standardutils.validation.StringFormatValidator;
-
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import se.unlogic.standardutils.date.DateUtils;
+import se.unlogic.standardutils.validation.StringFormatValidator;
+
 public class DatePopulator extends BaseStringPopulator<Date> {
 
-	private final SimpleDateFormat dateFormat;
+    private final SimpleDateFormat dateFormat;
 
-	public DatePopulator(SimpleDateFormat dateFormat) {
+    public DatePopulator(SimpleDateFormat dateFormat) {
 
-		super();
+        super();
 
-		this.dateFormat = dateFormat;
-	}
+        this.dateFormat = dateFormat;
+    }
 
-	public DatePopulator(String populatorID, SimpleDateFormat dateFormat) {
+    public DatePopulator(String populatorID, SimpleDateFormat dateFormat) {
 
-		super(populatorID);
+        super(populatorID);
 
-		this.dateFormat = dateFormat;
-	}
+        this.dateFormat = dateFormat;
+    }
 
-	public DatePopulator(String populatorID, SimpleDateFormat dateFormat, StringFormatValidator formatValidator) {
+    public DatePopulator(String populatorID, SimpleDateFormat dateFormat, StringFormatValidator formatValidator) {
 
-		super(populatorID,formatValidator);
-		this.dateFormat = dateFormat;
-	}
+        super(populatorID, formatValidator);
+        this.dateFormat = dateFormat;
+    }
 
-	public Class<? extends Date> getType() {
+    public Class<? extends Date> getType() {
 
-		return Date.class;
-	}
+        return Date.class;
+    }
 
-	public Date getValue(String value) {
+    public Date getValue(String value) {
 
-		try {
-			java.util.Date utilDate = this.dateFormat.parse(value);
-			
-			return new Date(utilDate.getTime());
-			
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        try {
+            java.util.Date utilDate = this.dateFormat.parse(value);
 
-	@Override
-	public boolean validateDefaultFormat(String value) {
+            return new Date(utilDate.getTime());
 
-		return DateUtils.isValidDate(this.dateFormat, value);
-	}
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean validateDefaultFormat(String value) {
+
+        return DateUtils.isValidDate(this.dateFormat, value);
+    }
 }

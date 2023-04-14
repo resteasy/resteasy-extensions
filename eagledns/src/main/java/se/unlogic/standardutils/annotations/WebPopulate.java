@@ -7,31 +7,38 @@
  ******************************************************************************/
 package se.unlogic.standardutils.annotations;
 
-import se.unlogic.standardutils.populators.BeanStringPopulator;
-import se.unlogic.standardutils.populators.DummyPopulator;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import se.unlogic.standardutils.populators.BeanStringPopulator;
+import se.unlogic.standardutils.populators.DummyPopulator;
+
 /**
- * This annotation is used to annotate fields that are to be populated by the {@link se.unlogic.webutils.populators.annotated.AnnotatedRequestPopulator}.
- * 
+ * This annotation is used to annotate fields that are to be populated by the
+ * {@link se.unlogic.webutils.populators.annotated.AnnotatedRequestPopulator}.
+ *
  * @author Robert "Unlogic" Olofsson (unlogic@unlogic.se)
  *
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD,ElementType.METHOD})
+@Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface WebPopulate {
 
-	String paramName() default "";
-	boolean required() default false;
-	long maxLength() default 0;
-	long minLength() default 0;
-	String populatorID() default "";
-	boolean trim() default true;
-	Class<? extends BeanStringPopulator<?>> populator() default DummyPopulator.class;
+    String paramName() default "";
+
+    boolean required() default false;
+
+    long maxLength() default 0;
+
+    long minLength() default 0;
+
+    String populatorID() default "";
+
+    boolean trim() default true;
+
+    Class<? extends BeanStringPopulator<?>> populator() default DummyPopulator.class;
 }
