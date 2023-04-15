@@ -18,7 +18,7 @@
         <dependency>
             <groupId>dnsjava</groupId>
             <artifactId>dnsjava</artifactId>
-            <version>3.0.2</version>
+            <version>3.5.2</version>
         </dependency>
 
         <dependency>
