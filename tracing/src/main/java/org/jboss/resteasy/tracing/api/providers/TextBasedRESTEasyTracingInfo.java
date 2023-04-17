@@ -9,7 +9,18 @@ import org.jboss.resteasy.tracing.api.RESTEasyTracingMessage;
 
 public class TextBasedRESTEasyTracingInfo extends RESTEasyTracingInfo {
 
-    protected final List<RESTEasyTracingMessage> messageList = new ArrayList<>();
+    /**
+     * Note this is an unmodifiable list that removes entries upon iteration.
+     * <p>
+     * The {@link List#iterator()}, {@link List#size()} and {@link List#isEmpty()} are the only method that don't
+     * throw an {@link UnsupportedOperationException}.
+     * </p>
+     *
+     * @deprecated Use {@link #pop()}
+     */
+    @Deprecated(forRemoval = true)
+    protected final List<RESTEasyTracingMessage> messageList = new LazyDelegateLimitedList<>(() -> new ArrayList<>(pop()),
+            this::size);
 
     protected static String formatPercent(final long value, final long top) {
         if (value == 0) {
@@ -31,12 +42,8 @@ public class TextBasedRESTEasyTracingInfo extends RESTEasyTracingInfo {
         return formatDuration(toTimestamp - fromTimestamp);
     }
 
-    public void addMessage(RESTEasyTracingMessage message) {
-        messageList.add(message);
-    }
-
     @Override
-    public boolean supports(RESTEasyTracingInfoFormat format) {
+    public boolean supports(final RESTEasyTracingInfoFormat format) {
         if (format.equals(RESTEasyTracingInfoFormat.TEXT))
             return true;
         else
@@ -46,6 +53,7 @@ public class TextBasedRESTEasyTracingInfo extends RESTEasyTracingInfo {
     public String[] getMessages() {
         // Format: EventCategory [duration / sinceRequestTime | duration/requestTime % ]
         // e.g.:   RI [ 3.88 / 8.93 ms | 1.37 %] message text
+        final List<RESTEasyTracingMessage> messageList = pop();
 
         final long fromTimestamp = messageList.get(0).getTimestamp() - messageList.get(0).getDuration();
         final long toTimestamp = messageList.get(messageList.size() - 1).getTimestamp();
@@ -68,7 +76,7 @@ public class TextBasedRESTEasyTracingInfo extends RESTEasyTracingInfo {
                     .append(formatPercent(message.getDuration(), toTimestamp - fromTimestamp))
                     .append(" %] ");
             // text
-            text.append(message.toString());
+            text.append(message);
             messages[i] = text.toString();
         }
         return messages;
