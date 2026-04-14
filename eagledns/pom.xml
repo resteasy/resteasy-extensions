@@ -8,7 +8,7 @@
     </parent>
     <artifactId>resteasy-eagledns-fork</artifactId>
     <name>RESTEasy EagleDNS Fork For Testing Purposes</name>
-    <description />
+    <description/>
 
     <properties>
         <project.build.sourceEncoding>ISO8859_1</project.build.sourceEncoding>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>dnsjava</groupId>
             <artifactId>dnsjava</artifactId>
-            <version>3.5.3</version>
+            <version>3.6.4</version>
         </dependency>
 
         <dependency>
