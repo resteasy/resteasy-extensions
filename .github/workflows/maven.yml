@@ -5,9 +5,19 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ '**' ]
+    branches-ignore:
+      - 'dependabot/**'
   pull_request:
-    types: [ opened, synchronize, reopened, ready_for_review ]
+    branches:
+      - '**'
+
+# Only run the latest job
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+env:
+  MVN_CMD: './mvnw -V -B -fae'
 
 jobs:
   build:
@@ -18,32 +28,45 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest ]
-        java: [ '11', '17' ]
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - name: Set up JDKs
+        uses: actions/setup-java@v5
         with:
-          java-version: ${{ matrix.java }}
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'maven'
-      - name: Build on ${{ runner.os }} with Java ${{ matrix.java }}
-        run: mvn -B clean install
+          java-version: |
+            11
+            17
+            21
+            25
+            26
+      - name: Build and Test on ${{ runner.os }}
+        run: ${{ env.MVN_CMD }} clean install '-Djava11.home=${{env.JAVA_HOME_11_X64}}' '-Djava17.home=${{env.JAVA_HOME_17_X64}}' '-Djava21.home=${{env.JAVA_HOME_21_X64}}' '-Djava25.home=${{env.JAVA_HOME_25_X64}}'
+      - name: Upload test logs for failed run
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: failure-reports-${{ matrix.os }}
+          path: |
+            **/surefire-reports/**
+            **/failsafe-reports/**
+            **/*.log
 
   format-check:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
         with:
-          java-version: 11
+          java-version: 25
           distribution: 'temurin'
           cache: 'maven'
       - name: Validate Formatting
         run: |
-          mvn -B validate -Pformat-check -Denforcer.skip=true
+          ${{ env.MVN_CMD }} validate -Pformat-check -Denforcer.skip=true
 

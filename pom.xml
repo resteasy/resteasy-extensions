@@ -1,35 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+
     <parent>
-        <groupId>dev.resteasy.tools</groupId>
-        <artifactId>resteasy-parent</artifactId>
-        <version>2.0.3.Final</version>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>53</version>
         <relativePath/>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <name>RESTEasy Extensions</name>
-    <description>Resteasy Extensions and Utilities</description>
+    <description>RESTEasy Extensions and Utilities</description>
+    <url>https://resteasy.dev</url>
 
     <groupId>org.jboss.resteasy</groupId>
     <artifactId>resteasy-extensions</artifactId>
     <version>2.0.2.Final-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <properties>
-        <!-- print logs to file by default -->
-        <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
-        <!-- Dependency versions, please keep in alphabetical order -->
-        <version.jakarta.ws.rs-api>3.1.0</version.jakarta.ws.rs-api>
-        <version.org.jboss.logging.jboss-logging>3.5.3.Final</version.org.jboss.logging.jboss-logging>
-        <version.org.jboss.logging.jboss-logging-annotations>2.2.1.Final
-        </version.org.jboss.logging.jboss-logging-annotations>
-        <version.org.jboss.resteasy>6.2.7.Final</version.org.jboss.resteasy>
-        <version.org.junit>5.10.2</version.org.junit>
-    </properties>
-
-    <url>https://resteasy.dev/</url>
+    <organization>
+        <name>RESTEasy Community</name>
+        <url>https://resteasy.dev</url>
+    </organization>
 
     <licenses>
         <license>
@@ -55,6 +48,43 @@
         <system>GitHub</system>
         <url>https://github.com/resteasy/resteasy-extensions/issues</url>
     </issueManagement>
+
+    <properties>
+
+        <maven.compiler.release>11</maven.compiler.release>
+
+        <!-- print logs to file by default -->
+        <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+        <!-- Dependency versions, please keep in alphabetical order -->
+        <version.jakarta.ws.rs-api>3.1.0</version.jakarta.ws.rs-api>
+        <version.org.jboss.logging.jboss-logging>3.6.3.Final</version.org.jboss.logging.jboss-logging>
+        <version.org.jboss.logging.jboss-logging-tools>3.0.4.Final</version.org.jboss.logging.jboss-logging-tools>
+        <version.org.jboss.resteasy>6.2.15.Final</version.org.jboss.resteasy>
+        <version.org.junit>5.13.4</version.org.junit>
+        <version.org.kohsuke.metainf-services>1.11</version.org.kohsuke.metainf-services>
+
+        <!-- Plugin versions -->
+        <version.formatter.maven.plugin>2.29.0</version.formatter.maven.plugin>
+        <version.impsort.maven.plugin>1.13.0</version.impsort.maven.plugin>
+
+        <!-- maven-release-plugin configuration -->
+        <autoVersionSubmodules>true</autoVersionSubmodules>
+        <releaseProfiles>central-release</releaseProfiles>
+        <signTag>true</signTag>
+        <tagNameFormat>v@{project.version}</tagNameFormat>
+        <arguments>-DskipTests -DpushChanges=${pushChanges} -Dcentral.autoPublish=${central.autoPublish}</arguments>
+        <!-- Do not push changes by default when using the maven-release-plugin:prepare -->
+        <pushChanges>false</pushChanges>
+        <!-- Use the local directory when using perform -->
+        <localCheckout>true</localCheckout>
+        <!-- Maven Central properties -->
+        <central.sonatype.url>https://central.sonatype.com</central.sonatype.url>
+        <central.serverId>central</central.serverId>
+        <central.deploymentName>${project.artifactId}-${project.version}</central.deploymentName>
+        <central.autoPublish>true</central.autoPublish>
+        <central.waitUntil>validated</central.waitUntil>
+        <central.skipPublishing>false</central.skipPublishing>
+    </properties>
 
     <modules>
         <module>tracing</module>
@@ -96,7 +126,7 @@
             <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging-annotations</artifactId>
-                <version>${version.org.jboss.logging.jboss-logging-annotations}</version>
+                <version>${version.org.jboss.logging.jboss-logging-tools}</version>
                 <scope>provided</scope>
                 <optional>true</optional>
             </dependency>
@@ -104,9 +134,15 @@
             <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging-processor</artifactId>
-                <version>${version.org.jboss.logging.jboss-logging-annotations}</version>
+                <version>${version.org.jboss.logging.jboss-logging-tools}</version>
                 <scope>provided</scope>
                 <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.kohsuke.metainf-services</groupId>
+                <artifactId>metainf-services</artifactId>
+                <version>${version.org.kohsuke.metainf-services}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -116,7 +152,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
                         <excludePackageNames>
@@ -124,11 +159,78 @@
                         </excludePackageNames>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>net.revelc.code.formatter</groupId>
+                    <artifactId>formatter-maven-plugin</artifactId>
+                    <version>${version.formatter.maven.plugin}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>dev.resteasy.tools</groupId>
+                            <artifactId>ide-config</artifactId>
+                            <version>3</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <!-- store outside of target to speed up formatting when mvn clean is used -->
+                        <cachedir>.cache</cachedir>
+                        <configFile>eclipse-code-formatter.xml</configFile>
+                        <configXmlFile>resteasy-xml.properties</configXmlFile>
+                        <includeResources>true</includeResources>
+                        <lineEnding>LF</lineEnding>
+                        <removeTrailingWhitespace>true</removeTrailingWhitespace>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>format</id>
+                            <goals>
+                                <goal>format</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>net.revelc.code</groupId>
+                    <artifactId>impsort-maven-plugin</artifactId>
+                    <version>${version.impsort.maven.plugin}</version>
+                    <configuration>
+                        <!-- store outside of target to speed up formatting when mvn clean is used -->
+                        <cachedir>.cache</cachedir>
+                        <groups>java.,javax.,jakarta.,org.,com.</groups>
+                        <staticGroups>*</staticGroups>
+                        <removeUnused>true</removeUnused>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>sort-resource-imports</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>sort</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.jboss.logging</groupId>
+                            <artifactId>jboss-logging-processor</artifactId>
+                            <version>${version.org.jboss.logging.jboss-logging-tools}</version>
+                        </path>
+                        <path>
+                            <groupId>org.kohsuke.metainf-services</groupId>
+                            <artifactId>metainf-services</artifactId>
+                            <version>${version.org.kohsuke.metainf-services}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <executions>
                     <execution>
@@ -188,25 +290,4 @@
             </build>
         </profile>
     </profiles>
-
-    <repositories>
-        <!-- Required for provisioning WildFly. Not all dependencies currently exist on Maven Central. This is also
-             useful for when we want to test with versions releases that have not yet been synchronized to Maven Central
-             from JBoss Nexus.
-         -->
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Repository Group</name>
-            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
 </project>

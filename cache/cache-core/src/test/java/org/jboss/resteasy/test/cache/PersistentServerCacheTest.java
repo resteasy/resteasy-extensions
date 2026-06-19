@@ -50,7 +50,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
+@EnabledOnJre({
+        JRE.JAVA_11,
+        JRE.JAVA_17,
+        JRE.JAVA_21,
+})
 public class PersistentServerCacheTest {
     private static int count = 0;
     private static int plainCount = 0;
