@@ -21,8 +21,6 @@
         <dependency>
             <groupId>org.kohsuke.metainf-services</groupId>
             <artifactId>metainf-services</artifactId>
-            <version>1.9</version>
-            <optional>true</optional>
             <scope>test</scope>
         </dependency>
         <dependency>

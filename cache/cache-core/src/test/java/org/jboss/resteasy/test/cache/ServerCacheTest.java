@@ -43,11 +43,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 
 /**
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @version $Revision: 1 $
  */
+@EnabledOnJre({
+        JRE.JAVA_11,
+        JRE.JAVA_17,
+        JRE.JAVA_21,
+})
 public class ServerCacheTest {
     private static NettyJaxrsServer server;
     private static ResteasyDeployment deployment;
