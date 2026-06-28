@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jboss.resteasy</groupId>
@@ -8,19 +9,18 @@
     </parent>
     <artifactId>resteasy-tracing-api</artifactId>
     <name>RESTEasy Tracing API</name>
-    <description />
+    <description>The RESTEasy Tracing API</description>
     <packaging>jar</packaging>
+
+    <properties>
+        <version.org.wildfly.common>2.0.1</version.org.wildfly.common>
+    </properties>
 
     <dependencies>
         <!-- Test Dependencies -->
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.kohsuke.metainf-services</groupId>
-            <artifactId>metainf-services</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -31,6 +31,13 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-undertow-cdi</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Required for the org.jboss.threads module used in Undertow -->
+        <dependency>
+            <groupId>org.wildfly.common</groupId>
+            <artifactId>wildfly-common</artifactId>
+            <version>${version.org.wildfly.common}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
