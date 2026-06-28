@@ -155,7 +155,7 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
                         <excludePackageNames>
-                            com.restfully.*:org.jboss.resteasy.examples.*:se.unlogic.*:org.jboss.resteasy.tests.*
+                            com.restfully.*:org.jboss.resteasy.examples.*:org.jboss.resteasy.tests.*
                         </excludePackageNames>
                     </configuration>
                 </plugin>
