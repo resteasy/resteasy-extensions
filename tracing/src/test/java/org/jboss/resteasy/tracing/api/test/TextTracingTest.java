@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jboss.tracing.api;
+package org.jboss.resteasy.tracing.api.test;
 
 import java.util.Collection;
 import java.util.Map;
@@ -32,7 +32,6 @@ import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
-import org.jboss.resteasy.tracing.api.RESTEasyTracingInfo;
 import org.jboss.resteasy.tracing.api.RESTEasyTracingInfoFormat;
 import org.jboss.resteasy.tracing.api.RESTEasyTracingMessage;
 import org.jboss.resteasy.tracing.api.providers.TextBasedRESTEasyTracingInfo;
@@ -40,7 +39,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.kohsuke.MetaInfServices;
 
 /**
  * @author <a href="mailto:jperkins@redhat.com">James R. Perkins</a>
@@ -204,7 +202,6 @@ public class TextTracingTest {
         }
     }
 
-    @MetaInfServices(RESTEasyTracingInfo.class)
     @SuppressWarnings("removal")
     public static class LegacyTracingInfo extends TextBasedRESTEasyTracingInfo {
         @Override
