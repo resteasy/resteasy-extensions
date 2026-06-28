@@ -9,7 +9,7 @@
     </parent>
     <artifactId>resteasy-eagledns-fork</artifactId>
     <name>RESTEasy EagleDNS Fork For Testing Purposes</name>
-    <description/>
+    <description>A RESTEasy fork of EagleDNS</description>
 
     <properties>
         <project.build.sourceEncoding>ISO8859_1</project.build.sourceEncoding>

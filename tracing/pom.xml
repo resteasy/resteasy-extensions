@@ -9,7 +9,7 @@
     </parent>
     <artifactId>resteasy-tracing-api</artifactId>
     <name>RESTEasy Tracing API</name>
-    <description/>
+    <description>The RESTEasy Tracing API</description>
     <packaging>jar</packaging>
 
     <properties>
